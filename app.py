@@ -39,10 +39,6 @@ def get_user_id():
     u = sb_user().auth.get_user()
     return u.user.id
 
-def allowed_file(filename):
-    return '.' in filename and \
-        filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
 @app.route("/", methods=["GET"])
 def root():
     return render_template("base.html")
