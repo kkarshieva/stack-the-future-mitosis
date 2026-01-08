@@ -2,12 +2,12 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from dotenv import load_dotenv
 from supabase import create_client
-from werkzeug.utils import secure_filename
 
 load_dotenv()
 
 #load keys
 SUPABASE_URL = os.environ["SUPABASE_URL"]
+SUPABASE_SERVICE_ROLE_KEY = os.environ["SUPABASE_SERVICE_ROLE_KEY"]
 SUPABASE_ANON_KEY = os.environ["SUPABASE_ANON_KEY"]
 FLASK_SECRET_KEY = os.environ["FLASK_SECRET_KEY"]
 
@@ -17,7 +17,10 @@ app.secret_key = FLASK_SECRET_KEY
 
 #helpers for supabase
 def sb_public():
-    return create_client(SUPABASE_URL, SUPABASE_ANON_KEY) 
+    return create_client(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+def sb_service():
+    return create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY) 
 
 def sb_user():
     sb = create_client(SUPABASE_URL, SUPABASE_ANON_KEY)
@@ -36,11 +39,6 @@ def get_user_id():
     u = sb_user().auth.get_user()
     return u.user.id
 
-UPLOAD_FOLDER = '/path/to/the/uploads'
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
-app = Flask(__name__)
-app.config['UPLOAD_FOLDER']=UPLOAD_FOLDER
-
 def allowed_file(filename):
     return '.' in filename and \
         filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -56,7 +54,20 @@ def onboarding():
     if guard:
         return guard
     if request.method == "POST":
-        request.data
+        try:
+            prefs = request.form.get("preferences")
+            print("PREFS:", prefs)
+            data = {
+                "user_id": get_user_id(),
+                "preferred_value": prefs,
+            }
+            response = sb_service().table("prefs").insert(data).execute()
+            print("Insert Response", response)
+        except Exception as e:
+            print(e)
+            flash("Something went wrong. Please try again.", "error")
+            return render_template("onboarding.html")
+        return redirect(url_for("onboarding"))
     return render_template("onboarding.html")
 
 
