@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Login</title>
+  </head>
+  <body>
+    <h1>Login</h1>
+
+    {% with msgs = get_flashed_messages() %}
+      {% if msgs %}
+        <p>{{ msgs[0] }}</p>
+      {% endif %}
+    {% endwith %}
+
+    <form method="post">
+      <label>Email</label><br />
+      <input name="email" type="email" required /><br /><br />
+
+      <label>Password</label><br />
+      <input name="password" type="password" required /><br /><br />
+
+      <button type="submit">Log in</button>
+    </form>
+
+    <p><a href="/signup">Create an account</a></p>
+  </body>
+</html>
+
