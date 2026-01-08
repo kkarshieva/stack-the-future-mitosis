@@ -21,6 +21,52 @@
         color: white;
         font-size: 80px;
         z-index: 0;
+        animation: sparkle 3s ease-in-out infinite;
+      }
+      
+      /* Sparkle animation */
+      @keyframes sparkle {
+        0%, 100% {
+          opacity: 0.3;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.8;
+          transform: scale(1.1);
+        }
+      }
+      
+      /* Different animation delays for variety */
+      .chemical-decoration:nth-child(1) {
+        animation-delay: 0s;
+      }
+      
+      .chemical-decoration:nth-child(2) {
+        animation-delay: 0.5s;
+      }
+      
+      .chemical-decoration:nth-child(3) {
+        animation-delay: 1s;
+      }
+      
+      .chemical-decoration:nth-child(4) {
+        animation-delay: 1.5s;
+      }
+      
+      .chemical-decoration:nth-child(5) {
+        animation-delay: 0.25s;
+      }
+      
+      .chemical-decoration:nth-child(6) {
+        animation-delay: 0.75s;
+      }
+      
+      .chemical-decoration:nth-child(7) {
+        animation-delay: 1.25s;
+      }
+      
+      .chemical-decoration:nth-child(8) {
+        animation-delay: 1.75s;
       }
       
       .chemical-decoration.top-left {
@@ -41,6 +87,43 @@
       .chemical-decoration.bottom-right {
         bottom: 20px;
         right: 20px;
+      }
+      
+      /* Additional positions for more decorations */
+      .chemical-decoration.mid-left {
+        top: 50%;
+        left: 10%;
+        transform: translateY(-50%);
+      }
+      
+      .chemical-decoration.mid-right {
+        top: 50%;
+        right: 10%;
+        transform: translateY(-50%);
+      }
+      
+      .chemical-decoration.top-center {
+        top: 15%;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      
+      .chemical-decoration.bottom-center {
+        bottom: 15%;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      
+      /* Smaller decorations */
+      .chemical-decoration.small {
+        font-size: 50px;
+        opacity: 0.4;
+      }
+      
+      /* Medium decorations */
+      .chemical-decoration.medium {
+        font-size: 60px;
+        opacity: 0.45;
       }
       
       .main-container {
@@ -146,6 +229,7 @@
     </style>
   </head>
   <body>
+    <!-- Large corner decorations -->
     <div class="chemical-decoration top-left">
       <i class="bi bi-hexagon"></i>
     </div>
@@ -157,6 +241,36 @@
     </div>
     <div class="chemical-decoration bottom-right">
       <i class="bi bi-hexagon"></i>
+    </div>
+    
+    <!-- Additional side decorations -->
+    <div class="chemical-decoration mid-left medium">
+      <i class="bi bi-circle"></i>
+    </div>
+    <div class="chemical-decoration mid-right medium">
+      <i class="bi bi-triangle"></i>
+    </div>
+    
+    <!-- Top and bottom center decorations -->
+    <div class="chemical-decoration top-center small">
+      <i class="bi bi-hexagon"></i>
+    </div>
+    <div class="chemical-decoration bottom-center small">
+      <i class="bi bi-circle"></i>
+    </div>
+    
+    <!-- Additional small scattered decorations -->
+    <div class="chemical-decoration" style="top: 30%; left: 5%; font-size: 40px; opacity: 0.35;">
+      <i class="bi bi-triangle"></i>
+    </div>
+    <div class="chemical-decoration" style="top: 70%; right: 5%; font-size: 40px; opacity: 0.35;">
+      <i class="bi bi-hexagon"></i>
+    </div>
+    <div class="chemical-decoration" style="top: 25%; right: 15%; font-size: 45px; opacity: 0.4;">
+      <i class="bi bi-circle"></i>
+    </div>
+    <div class="chemical-decoration" style="bottom: 25%; left: 15%; font-size: 45px; opacity: 0.4;">
+      <i class="bi bi-triangle"></i>
     </div>
     
     <div class="main-container">
