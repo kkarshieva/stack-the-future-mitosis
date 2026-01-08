@@ -36,7 +36,7 @@
         <div class="card-container text-center">
             <div id="compoundCard" class="card compound-card shadow-lg">
 
-                <img src="{{ url_for('static', filename='placeholder.png') }}"
+                <img src="{{ url_for('get_compound_image', smiles=smiles) }}"
                      class="card-img-top"
                      alt="Compound structure image"
                      width="400px"
@@ -44,9 +44,9 @@
 
                 <div class="card-body">
                     <div class="smiles-text mb-3">
-                        <strong>SMILES</strong>
+                        <strong>{{ name }}</strong>
                         <br>
-                        <span id="smiles">CC(C)(C)</span>
+                        <span id="smiles">{{ smiles }}</span>
                     </div>
 
                     <ul class="list-group mb-4">
@@ -57,21 +57,30 @@
                         <li class="list-group-item">And a fifth one</li>
                     </ul>
 
-                    <div class="d-flex justify-content-around mt-4">
-                        <button id="dislikeBtn"
-                                class="btn btn-outline-danger match-btn"
-                                data-bs-toggle="tooltip"
-                                title="Skip">
-                            <i class="bi bi-x"></i>
-                        </button>
+                    <form method="post">
+                        <div class="d-flex justify-content-around mt-4">
+                            <button id="dislikeBtn"
+                                    class="btn btn-outline-danger match-btn"
+                                    data-bs-toggle="tooltip"
+                                    title="Skip"
+                                    type="submit"
+                                    name="action"
+                                    value="skip">
+                                <i class="bi bi-x"></i>
+                            </button>
 
-                        <button id="likeBtn"
-                                class="btn btn-outline-success match-btn"
-                                data-bs-toggle="tooltip"
-                                title="Like">
-                            <i class="bi bi-check"></i>
-                        </button>
-                    </div>
+                            <button id="likeBtn"
+                                    class="btn btn-outline-success match-btn"
+                                    data-bs-toggle="tooltip"
+                                    title="Like"
+                                    type="submit"
+                                    name="action"
+                                    value="like">
+                                <i class="bi bi-check"></i>
+                            </button>
+                        </div>
+
+                    </form>
                 </div>
 
             </div>
