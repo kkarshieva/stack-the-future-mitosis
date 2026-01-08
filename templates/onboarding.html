@@ -3,4 +3,9 @@
 {% block content %}
     <h2>Preferences Page</h2>
     <p>Hi!</p>
+    <form method="POST" action="/onboarding">
+      <label for="preferences">Preferences:</label>
+      <input type="text" id="preferences" name="preferences">
+      <input type="submit">
+    </form>
 {% endblock content %}

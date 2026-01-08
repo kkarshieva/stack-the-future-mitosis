@@ -2,6 +2,7 @@ import os
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from dotenv import load_dotenv
 from supabase import create_client
+from werkzeug.utils import secure_filename
 
 load_dotenv()
 
@@ -35,16 +36,27 @@ def get_user_id():
     u = sb_user().auth.get_user()
     return u.user.id
 
+UPLOAD_FOLDER = '/path/to/the/uploads'
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+app = Flask(__name__)
+app.config['UPLOAD_FOLDER']=UPLOAD_FOLDER
+
+def allowed_file(filename):
+    return '.' in filename and \
+        filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 @app.route("/", methods=["GET"])
 def root():
     return render_template("base.html")
 
 
-@app.route("/onboarding", methods=["GET"])
+@app.route("/onboarding", methods=["GET", "POST"])
 def onboarding():
     guard = require_login()
     if guard:
         return guard
+    if request.method == "POST":
+        request.data
     return render_template("onboarding.html")
 
 
@@ -123,7 +135,3 @@ def login_post():
 def logout():
     session.clear()
     return redirect(url_for("login"))
-
-
-
-
