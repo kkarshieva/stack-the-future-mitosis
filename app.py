@@ -126,7 +126,7 @@ def matching():
         idx = session["index"]
         compound = compounds[idx]
 
-        if action == "accept":
+        if action == "like":
             session["accepted"].append(compound)
         else:
             session["rejected"].append(compound)
