@@ -1,29 +1,208 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Sign up</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up - Bonded</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
+    <style>
+      body {
+        background: linear-gradient(to bottom, #a8e6a3, #d4f4d1);
+        min-height: 100vh;
+        position: relative;
+        overflow-x: hidden;
+      }
+      
+      .chemical-decoration {
+        position: absolute;
+        opacity: 0.50;
+        color: white;
+        font-size: 80px;
+        z-index: 0;
+      }
+      
+      .chemical-decoration.top-left {
+        top: 20px;
+        left: 20px;
+      }
+      
+      .chemical-decoration.top-right {
+        top: 20px;
+        right: 20px;
+      }
+      
+      .chemical-decoration.bottom-left {
+        bottom: 20px;
+        left: 20px;
+      }
+      
+      .chemical-decoration.bottom-right {
+        bottom: 20px;
+        right: 20px;
+      }
+      
+      .main-container {
+        position: relative;
+        z-index: 1;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+      }
+      
+      .header-section {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      
+      .logo-container {
+        display: inline-flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 10px;
+        justify-content: center;
+      }
+      
+      .beaker-img {
+        height: 67px;
+        width: auto;
+      }
+      
+      .brand-title {
+        color: white;
+        font-size: 64px;
+        font-weight: bold;
+        margin: 0;
+      }
+      
+      .tagline {
+        color: #fffefe;
+        font-size: 26px;
+        margin-top: 5px;
+      }
+      
+      .signup-card {
+        background: white;
+        border-radius: 8px;
+        padding: 40px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        max-width: 450px;
+        width: 100%;
+        margin: 0 auto;
+      }
+      
+      .form-label {
+        color: black;
+        font-weight: 500;
+        margin-bottom: 8px;
+      }
+      
+      .form-control {
+        border: 1px solid #87ceeb;
+        border-radius: 4px;
+        padding: 10px;
+      }
+      
+      .form-control:focus {
+        border-color: #87ceeb;
+        box-shadow: 0 0 0 0.2rem rgba(135, 206, 235, 0.25);
+      }
+      
+      .btn-signup {
+        background-color: #81c784;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        padding: 12px;
+        font-size: 16px;
+        font-weight: 500;
+        width: 100%;
+        margin-top: 10px;
+      }
+      
+      .btn-signup:hover {
+        background-color: #66bb6a;
+        color: white;
+      }
+      
+      .login-link {
+        text-align: center;
+        margin-top: 20px;
+        color: black;
+        font-size: 14px;
+      }
+      
+      .login-link a {
+        color: black;
+        text-decoration: underline;
+      }
+      
+      .alert {
+        margin-bottom: 20px;
+      }
+    </style>
   </head>
   <body>
-    <h1>Sign up</h1>
-
-    {% with msgs = get_flashed_messages() %}
-      {% if msgs %}
-        <p>{{ msgs[0] }}</p>
-      {% endif %}
-    {% endwith %}
-
-    <form method="post">
-      <label>Email</label><br />
-      <input name="email" type="email" required /><br /><br />
-
-      <label>Password</label><br />
-      <input name="password" type="password" required /><br /><br />
-
-      <button type="submit">Sign up</button>
-    </form>
-
-    <p><a href="/login">Already have an account?</a></p>
+    <div class="chemical-decoration top-left">
+      <i class="bi bi-hexagon"></i>
+    </div>
+    <div class="chemical-decoration top-right">
+      <i class="bi bi-hexagon"></i>
+    </div>
+    <div class="chemical-decoration bottom-left">
+      <i class="bi bi-hexagon"></i>
+    </div>
+    <div class="chemical-decoration bottom-right">
+      <i class="bi bi-hexagon"></i>
+    </div>
+    
+    <div class="main-container">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-12 col-md-8 col-lg-6">
+            <div class="header-section">
+              <div class="logo-container">
+                <h1 class="brand-title">Bonded</h1>
+                <img src="{{ url_for('static', filename='beaker.png') }}" alt="Beaker" class="beaker-img" />
+              </div>
+              <p class="tagline">Meet your compound match!</p>
+            </div>
+            
+            <div class="signup-card">
+              {% with msgs = get_flashed_messages() %}
+                {% if msgs %}
+                  <div class="alert alert-warning" role="alert">
+                    {{ msgs[0] }}
+                  </div>
+                {% endif %}
+              {% endwith %}
+              
+              <form method="post">
+                <div class="mb-3">
+                  <label for="email" class="form-label">Email:</label>
+                  <input type="email" class="form-control" id="email" name="email" required />
+                </div>
+                
+                <div class="mb-3">
+                  <label for="password" class="form-label">Password:</label>
+                  <input type="password" class="form-control" id="password" name="password" required />
+                </div>
+                
+                <button type="submit" class="btn btn-signup">Sign Up</button>
+              </form>
+              
+              <div class="login-link">
+                Already have an account? <a href="/login">Login</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
 
