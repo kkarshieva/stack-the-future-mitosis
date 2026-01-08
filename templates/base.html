@@ -37,7 +37,18 @@
     <div class="w-100 h-100 overflow-auto d-flex flex-column justify-content-between">
       <div class="container">
 
+        <a href="{{ url_for('dashboard') }}">
+          <button>Go to Dashboard</button>
+        </a>
+        <a href="{{ url_for('matching') }}">
+          <button>Go to Matching</button>
+        </a>
+        <a href="{{ url_for('onboarding') }}">
+          <button>Go to Onboarding</button>
+        </a>
+
         {% block content %}
+          <h1>Welcome to home!</h1>
         {% endblock content %}
 
       </div>
