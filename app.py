@@ -55,14 +55,30 @@ def onboarding():
         return guard
     if request.method == "POST":
         try:
-            prefs = request.form.get("preferences")
-            print("PREFS:", prefs)
-            data = {
-                "user_id": get_user_id(),
-                "preferred_value": prefs,
-            }
-            response = sb_service().table("prefs").insert(data).execute()
-            print("Insert Response", response)
+            molw = request.form.get("molw")
+            lip = request.form.get("lip")
+            hba = request.form.get("hba")
+            hbd = request.form.get("hbd")
+
+            user_id = get_user_id()
+            
+            update_data = {}
+            if molw:
+                update_data["molecular_weight"] = molw
+            if lip:
+                update_data["lipophilicity"] = lip
+            if hba:
+                update_data["hydrogen_bonding_acceptors"] = hba
+            if hbd:
+                update_data["hydrogen_bonding_donors"] = hbd
+
+            if update_data:
+                response = sb_service().table("prefs") \
+                    .update(update_data) \
+                    .eq("user_id", user_id) \
+                    .execute()
+                print("UPDATE RESPONSE:", response)
+
         except Exception as e:
             print(e)
             flash("Something went wrong. Please try again.", "error")
