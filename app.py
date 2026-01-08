@@ -7,6 +7,7 @@ load_dotenv()
 
 #load keys
 SUPABASE_URL = os.environ["SUPABASE_URL"]
+SUPABASE_SERVICE_ROLE_KEY = os.environ["SUPABASE_SERVICE_ROLE_KEY"]
 SUPABASE_ANON_KEY = os.environ["SUPABASE_ANON_KEY"]
 FLASK_SECRET_KEY = os.environ["FLASK_SECRET_KEY"]
 
@@ -16,7 +17,10 @@ app.secret_key = FLASK_SECRET_KEY
 
 #helpers for supabase
 def sb_public():
-    return create_client(SUPABASE_URL, SUPABASE_ANON_KEY) 
+    return create_client(SUPABASE_URL, SUPABASE_ANON_KEY)
+
+def sb_service():
+    return create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY) 
 
 def sb_user():
     sb = create_client(SUPABASE_URL, SUPABASE_ANON_KEY)
@@ -35,16 +39,51 @@ def get_user_id():
     u = sb_user().auth.get_user()
     return u.user.id
 
+def allowed_file(filename):
+    return '.' in filename and \
+        filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
 @app.route("/", methods=["GET"])
 def root():
     return render_template("base.html")
 
 
-@app.route("/onboarding", methods=["GET"])
+@app.route("/onboarding", methods=["GET", "POST"])
 def onboarding():
     guard = require_login()
     if guard:
         return guard
+    if request.method == "POST":
+        try:
+            molw = request.form.get("molw")
+            lip = request.form.get("lip")
+            hba = request.form.get("hba")
+            hbd = request.form.get("hbd")
+
+            user_id = get_user_id()
+            
+            update_data = {}
+            if molw:
+                update_data["molecular_weight"] = molw
+            if lip:
+                update_data["lipophilicity"] = lip
+            if hba:
+                update_data["hydrogen_bonding_acceptors"] = hba
+            if hbd:
+                update_data["hydrogen_bonding_donors"] = hbd
+
+            if update_data:
+                response = sb_service().table("prefs") \
+                    .update(update_data) \
+                    .eq("user_id", user_id) \
+                    .execute()
+                print("UPDATE RESPONSE:", response)
+
+        except Exception as e:
+            print(e)
+            flash("Something went wrong. Please try again.", "error")
+            return render_template("onboarding.html")
+        return redirect(url_for("onboarding"))
     return render_template("onboarding.html")
 
 
@@ -123,7 +162,3 @@ def login_post():
 def logout():
     session.clear()
     return redirect(url_for("login"))
-
-
-
-

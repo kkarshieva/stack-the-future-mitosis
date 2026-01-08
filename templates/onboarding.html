@@ -3,4 +3,25 @@
 {% block content %}
     <h2>Preferences Page</h2>
     <p>Hi!</p>
+    <form method="POST" action="/onboarding">
+      <div>
+        <label for="molw">Molecular Weight:</label>
+        <input type="text" id="molw" name="molw">
+      </div>  
+      <div>
+        <label for="lip">Lipophilicity:</label>
+        <input type="text" id="lip" name="lip">
+      </div>
+      <div>
+        <label for="hba">Hydrogen Bonding Acceptors Preference:</label>
+        <input type="text" id="hba" name="hba">
+      </div>
+      <div>
+        <label for="hbd">Hydrogen Bonding Donors Preference:</label>
+        <input type="text" id="hbd" name="hbd">
+      </div>
+      <div>
+        <input type="submit">
+      </div>
+    </form>
 {% endblock content %}
