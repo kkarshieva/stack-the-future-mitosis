@@ -1,6 +1,134 @@
 {% extends "base.html" %}
 
+{% block styles %}
+    <style>
+        .card-container {
+            max-width: 450px;
+            margin: 20px auto;
+        }
+
+        .card {
+            border-radius: 24px;
+            border: none;
+        }
+
+        .compound-card {
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .match-btn {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            font-size: 2rem;
+        }
+
+        .smiles-text {
+            font-family: monospace;
+            font-size: 0.85rem;
+        }
+    </style>
+{% endblock styles %}
+
 {% block content %}
-    <h2>Matching Page</h2>
-    <p>Hi!</p>
+    <div class="matching-container mt-5">
+        <h2 class="text-center mb-4">Bond with Your Compound</h2>
+        <div class="card-container text-center">
+            <div id="compoundCard" class="card compound-card shadow-lg">
+
+                <img src="{{ url_for('static', filename='placeholder.png') }}"
+                     class="card-img-top"
+                     alt="Compound structure image"
+                     width="400px"
+                     height="400px" />
+
+                <div class="card-body">
+                    <div class="smiles-text mb-3">
+                        <strong>SMILES</strong>
+                        <br>
+                        <span id="smiles">CC(C)(C)</span>
+                    </div>
+
+                    <ul class="list-group mb-4">
+                        <li class="list-group-item">An item</li>
+                        <li class="list-group-item">A second item</li>
+                        <li class="list-group-item">A third item</li>
+                        <li class="list-group-item">A fourth item</li>
+                        <li class="list-group-item">And a fifth one</li>
+                    </ul>
+
+                    <div class="d-flex justify-content-around mt-4">
+                        <button id="dislikeBtn"
+                                class="btn btn-outline-danger match-btn"
+                                data-bs-toggle="tooltip"
+                                title="Skip">
+                            <i class="bi bi-x"></i>
+                        </button>
+
+                        <button id="likeBtn"
+                                class="btn btn-outline-success match-btn"
+                                data-bs-toggle="tooltip"
+                                title="Like">
+                            <i class="bi bi-check"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
 {% endblock content %}
+
+<!-- {% block scripts %}
+    <script>
+  // This will eventually come from Flask / JSON
+  const compounds = {{ compoundList , tojson }};
+
+  let index = 0;
+
+  const card = document.getElementById("compoundCard");
+  const img = document.getElementById("compoundImg");
+  const smilesEl = document.getElementById("smiles");
+  const chemblEl = document.getElementById("chemblId");
+
+  function loadCompound() {
+    if (index >= compounds.length) {
+      card.innerHTML = `
+        <div class="card-body">
+          <h5>No more compounds 🎉</h5>
+        </div>`;
+      return;
+    }
+
+    const c = compounds[index];
+
+    img.src = c.image_url;
+    smilesEl.textContent = c.smiles;
+    chemblEl.textContent = c.chembl_id;
+
+    card.classList.remove("swipe-left", "swipe-right");
+  }
+
+  function swipe(direction) {
+    card.classList.add(direction === "left" ? "swipe-left" : "swipe-right");
+
+    setTimeout(() => {
+      // TODO: send like/dislike to backend if you want
+      index++;
+      loadCompound();
+    }, 300);
+  }
+
+  document.getElementById("dislikeBtn").onclick = () => swipe("left");
+  document.getElementById("likeBtn").onclick = () => swipe("right");
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowLeft") swipe("left");
+    if (e.key === "ArrowRight") swipe("right");
+  });
+
+  loadCompound();
+</script>
+{% endblock scripts %} -->
