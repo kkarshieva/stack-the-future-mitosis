@@ -6,7 +6,14 @@
     <form method="POST" action="/onboarding">
       <div>
         <label for="molw">Molecular Weight:</label>
-        <input type="text" id="molw" name="molw">
+        <select id="molw" name="molw">
+          <option value="100s">1-100</option>
+          <option value="200s">101-200</option>
+          <option value="300s">201-300</option>
+          <option value="400s">301-400</option>
+          <option value="500s">401-500</option>
+          <option value="600s">501+</option>
+        </select>
       </div>  
       <div>
         <label for="lip">Lipophilicity:</label>
