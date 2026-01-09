@@ -17,11 +17,12 @@ from supabase import create_client
 from supabase_auth import User
 from image import smiles_to_svg
 import pandas as pd
+from match_compounds import match_compounds
 
-FILTERED_PATH = "datasets/compounds_filtered.csv"
-df = pd.read_csv(FILTERED_PATH)
-df = df[["Name", "Smiles", "Molecular Weight", "AlogP", "HBA", "HBD"]]
-compounds = df.to_dict(orient="records")
+# FILTERED_PATH = "datasets/compounds_filtered.csv"
+# df = pd.read_csv(FILTERED_PATH)
+# df = df[["Name", "Smiles", "Molecular Weight", "AlogP", "HBA", "HBD"]]
+# compounds = df.to_dict(orient="records")
 
 load_dotenv()
 
@@ -94,7 +95,17 @@ def save_match(
             }
         )
 
-    sb_client.table("matches").insert(data).execute()
+    check_res = (
+        sb_service()
+        .table("matches")
+        .select("compound_name")
+        .eq("compound_name", data["compound_name"])
+        .execute()
+    )
+    compound_exists = len(check_res.data) > 0
+
+    if not compound_exists:
+        sb_client.table("matches").insert(data).execute()
 
 
 @app.route("/", methods=["GET"])
@@ -162,13 +173,20 @@ def matching():
     if guard:
         return guard
 
-    user_id = get_user_id()
+    prefs = get_preferences()
+
+    compounds = match_compounds(
+        prefs["molecular_weight"],
+        prefs["lipophilicity"],
+        prefs["hydrogen_bonding_acceptors"],
+        prefs["hydrogen_bonding_donors"],
+    )
 
     if "index" not in session:
         session["index"] = 0
         session["accepted"] = []
 
-    idx = session["index"]
+    idx = prefs["index"]
 
     if idx >= len(compounds):
         return render_template("matching.html", done=True)
@@ -196,7 +214,16 @@ def api_match():
     payload = request.get_json()
     action = payload.get("action")
 
-    idx = session.get("index", 0)
+    prefs = get_preferences()
+
+    compounds = match_compounds(
+        prefs["molecular_weight"],
+        prefs["lipophilicity"],
+        prefs["hydrogen_bonding_acceptors"],
+        prefs["hydrogen_bonding_donors"],
+    )
+
+    idx = prefs["index"]
 
     if idx >= len(compounds):
         return jsonify({"done": True})
@@ -222,15 +249,37 @@ def api_match():
             properties,
         )
 
-    session["index"] = idx + 1
+    update_index(idx + 1)
 
-    next_compound = compounds[idx]
+    next_compound = compounds[idx + 1]
     return jsonify(
         {
             "done": False,
             "name": next_compound["Name"],
             "smiles": next_compound["Smiles"],
         }
+    )
+
+
+# def get_index():
+#     res = (
+#         sb_service()
+#         .table("prefs")
+#         .select("index")
+#         .eq("user_id", get_user_id())
+#         .single()
+#         .execute()
+#     )
+#     return res.data["index"]
+
+
+def update_index(new_index):
+    return (
+        sb_service()
+        .table("prefs")
+        .update({"index": new_index})
+        .eq("user_id", get_user_id())
+        .execute()
     )
 
 
