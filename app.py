@@ -419,6 +419,7 @@ def profile_chat():
             You are a playful scientific personality analyst.
             You ONLY use the data provided.
             Do NOT invent compounds or preferences.
+            Do NOT use markdown styling.
 
         User data:
         {context}
