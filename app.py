@@ -83,13 +83,13 @@ def onboarding():
             user_id = get_user_id()
 
             update_data = {}
-            if molw:
+            if molw != "na":
                 update_data["molecular_weight"] = molw
-            if lip:
+            if lip != "na":
                 update_data["lipophilicity"] = lip
-            if hba:
+            if hba != "na":
                 update_data["hydrogen_bonding_acceptors"] = hba
-            if hbd:
+            if hbd != "na":
                 update_data["hydrogen_bonding_donors"] = hbd
 
             if update_data:

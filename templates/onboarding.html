@@ -7,25 +7,41 @@
       <div>
         <label for="molw">Molecular Weight:</label>
         <select id="molw" name="molw">
-          <option value="100s">1-100</option>
-          <option value="200s">101-200</option>
-          <option value="300s">201-300</option>
-          <option value="400s">301-400</option>
-          <option value="500s">401-500</option>
-          <option value="600s">501+</option>
+          <option value="na">n/a</option>
+          <option value="1-100">1-100</option>
+          <option value="101-200">101-200</option>
+          <option value="201-300">201-300</option>
+          <option value="301-400">301-400</option>
+          <option value="401-500">401-500</option>
+          <option value="501+">501+</option>
         </select>
       </div>  
       <div>
         <label for="lip">Lipophilicity:</label>
-        <input type="text" id="lip" name="lip">
+        <select id="lip" name="lip">
+          <option value="na">n/a</option>
+          <option value="&lt0">&lt0</option>
+          <option value="0-1">0-1</option>
+          <option value="1-3">1-3</option>
+          <option value="3-5">3-5</option>
+          <option value="5+">5+</option>
+        </select>
       </div>
       <div>
         <label for="hba">Hydrogen Bonding Acceptors Preference:</label>
-        <input type="text" id="hba" name="hba">
+        <select id="hba" name="hba">
+          <option value="na">n/a</option>
+          <option value="0-10">0-10</option>
+          <option value="11+">11+</option>
+        </select>
       </div>
       <div>
         <label for="hbd">Hydrogen Bonding Donors Preference:</label>
-        <input type="text" id="hbd" name="hbd">
+        <select id="hbd" name="hbd">
+          <option value="na">n/a</option>
+          <option value="0-5">0-5</option>
+          <option value="6+">6+</option>
+        </select>
       </div>
       <div>
         <input type="submit">
