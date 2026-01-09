@@ -154,8 +154,8 @@ def get_compound_image():
         return "Invalid SMILES", 400
 
 
-@app.route("/dashboard", methods=["GET"])
-def dashboard():
+@app.route("/profile", methods=["GET"])
+def profile():
     guard = require_login()
     if guard:
         return guard
@@ -178,14 +178,14 @@ def dashboard():
             )
 
             return render_template(
-                "dashboard.html",
+                "profile.html",
                 prefs=prefResponse.data,
                 matches=matchResponse.data
             )
         except Exception as e:
             print(e)
-            return render_template("dashboard.html")
-    return render_template("dashboard.html")
+            return render_template("profile.html")
+    return render_template("profile.html")
 
 
 # auth routes
