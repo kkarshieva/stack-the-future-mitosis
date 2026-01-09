@@ -223,11 +223,30 @@
                                 </div>
 
                                 <ul class="list-group mb-4">
-                                    <li class="list-group-item">An item</li>
-                                    <li class="list-group-item">A second item</li>
-                                    <li class="list-group-item">A third item</li>
-                                    <li class="list-group-item">A fourth item</li>
-                                    <li class="list-group-item">And a fifth one</li>
+                                    {% if res.molecular_weight is not none %}
+                                        <li class="list-group-item">
+                                            <strong>Molecular Weight:</strong>
+                                            {{ res.molecular_weight }}
+                                        </li>
+                                    {% endif %}
+                                    {% if res.lipophilicity is not none %}
+                                        <li class="list-group-item">
+                                            <strong>Lipophilicity:</strong>
+                                            {{ res.lipophilicity }}
+                                        </li>
+                                    {% endif %}
+                                    {% if res.hydrogen_bonding_acceptors is not none %}
+                                        <li class="list-group-item">
+                                            <strong>HBA:</strong>
+                                            {{ res.hydrogen_bonding_acceptors }}
+                                        </li>
+                                    {% endif %}
+                                    {% if res.hydrogen_bonding_donors is not none %}
+                                        <li class="list-group-item">
+                                            <strong>HBA:</strong>
+                                            {{ res.hydrogen_bonding_donors }}
+                                        </li>
+                                    {% endif %}
                                 </ul>
 
                                 <div class="d-flex justify-content-around mt-4">

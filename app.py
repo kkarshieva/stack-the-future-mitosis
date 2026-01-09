@@ -20,6 +20,8 @@ from image import smiles_to_svg
 import pandas as pd
 from match_compounds import match_compounds
 import google.genai as genai
+from rdkit import Chem
+from rdkit.Chem import Descriptors, Crippen, Lipinski
 
 # FILTERED_PATH = "datasets/compounds_filtered.csv"
 # df = pd.read_csv(FILTERED_PATH)
@@ -197,6 +199,8 @@ def matching():
 
     compound = compounds[idx]
 
+    res = set_match_info(prefs, compound)
+
     return render_template(
         "matching.html",
         name=compound.get("Name"),
@@ -205,6 +209,7 @@ def matching():
         lipophilicity=compound.get("AlogP"),
         hba=compound.get("HBA"),
         hbd=compound.get("HBD"),
+        res=res,
         done=False,
     )
 
@@ -263,6 +268,30 @@ def api_match():
             "smiles": next_compound["Smiles"],
         }
     )
+
+
+def set_match_info(prefs, compound):
+    res = {
+        "molecular_weight": None,
+        "lipophilicity": None,
+        "hydrogen_bonding_acceptors": None,
+        "hydrogen_bonding_donors": None,
+    }
+
+    smiles = compound["Smiles"]
+
+    mol = Chem.MolFromSmiles(smiles)
+
+    if prefs["molecular_weight"] != "n/a":
+        res["molecular_weight"] = Descriptors.MolWt(mol)
+    if prefs["lipophilicity"] != "n/a":
+        res["lipophilicity"] = Crippen.MolLogP(mol)
+    if prefs["hydrogen_bonding_acceptors"] != "n/a":
+        res["hydrogen_bonding_acceptors"] = Lipinski.NumHAcceptors(mol)
+    if prefs["hydrogen_bonding_donors"] != "n/a":
+        res["hydrogen_bonding_donors"] = Lipinski.NumHDonors(mol)
+
+    return res
 
 
 # def get_index():
