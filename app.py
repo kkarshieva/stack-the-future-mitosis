@@ -155,7 +155,7 @@ def onboarding():
     return render_template("onboarding.html")
 
 
-@app.route("/matching")
+@app.route("/matching", methods=["GET"])
 def matching():
     guard = require_login()
     if guard:
@@ -174,34 +174,6 @@ def matching():
 
     compound = compounds[idx]
 
-    if request.method == "POST":
-        action = request.form.get("action")
-
-        if action == "like":
-            session["accepted"].append(compound)
-
-            properties = {
-                "molecular_weight": compound.get("Molecular Weight"),
-                "lipophilicity": compound.get("AlogP"),
-                "hydrogen_bonding_acceptors": compound.get("HBA"),
-                "hydrogen_bonding_donors": compound.get("HBD"),
-            }
-
-            try:
-                save_match(
-                    sb_user(),
-                    user_id,
-                    compound.get("Name"),
-                    compound.get("Smiles"),
-                    properties,
-                )
-            except Exception as e:
-                print("Error saving match:", e)
-
-        session["index"] += 1
-
-        return redirect(url_for("matching"))
-
     return render_template(
         "matching.html",
         name=compound.get("Name"),
@@ -218,12 +190,36 @@ def matching():
 def api_match():
     guard = require_login()
     if guard:
-        return guard
+        return jsonify({"error": "unauthorized"}), 401
+
+    payload = request.get_json()
+    action = payload.get("action")
 
     idx = session.get("index", 0)
 
     if idx >= len(compounds):
         return jsonify({"done": True})
+
+    compound = compounds[idx]
+    user_id = get_user_id()
+
+    if action == "like":
+        properties = {
+            "molecular_weight": compound.get("Molecular Weight"),
+            "lipophilicity": compound.get("AlogP"),
+            "hydrogen_bonding_acceptors": compound.get("HBA"),
+            "hydrogen_bonding_donors": compound.get("HBD"),
+        }
+
+        print("DEBUG: Saving match:", compound["Name"])
+
+        save_match(
+            sb_user(),
+            user_id,
+            compound.get("Name"),
+            compound.get("Smiles"),
+            properties,
+        )
 
     session["index"] = idx + 1
 
