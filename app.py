@@ -2,10 +2,12 @@ import os
 from flask import (
     Flask,
     render_template,
+    render_template_string,
     request,
     redirect,
     url_for,
     session,
+    jsonify,
     flash,
     Response,
     jsonify,
@@ -84,13 +86,13 @@ def onboarding():
             user_id = get_user_id()
 
             update_data = {}
-            if molw:
+            if molw != "na":
                 update_data["molecular_weight"] = molw
-            if lip:
+            if lip != "na":
                 update_data["lipophilicity"] = lip
-            if hba:
+            if hba != "na":
                 update_data["hydrogen_bonding_acceptors"] = hba
-            if hbd:
+            if hbd != "na":
                 update_data["hydrogen_bonding_donors"] = hbd
 
             if update_data:
@@ -101,7 +103,6 @@ def onboarding():
                     .eq("user_id", user_id)
                     .execute()
                 )
-                print("UPDATE RESPONSE:", response)
 
         except Exception as e:
             print(e)
@@ -163,12 +164,38 @@ def get_compound_image():
         return "Invalid SMILES", 400
 
 
-@app.route("/dashboard", methods=["GET"])
-def dashboard():
+@app.route("/profile", methods=["GET"])
+def profile():
     guard = require_login()
     if guard:
         return guard
-    return render_template("dashboard.html")
+    if request.method=="GET":
+        try:
+            prefResponse = (
+                sb_service()
+                .table("prefs")
+                .select("*")
+                .eq("user_id",get_user_id())
+                .execute()
+            )
+
+            matchResponse = (
+                sb_service()
+                .table("matches")
+                .select("*")
+                .eq("user_id",get_user_id())
+                .execute()
+            )
+
+            return render_template(
+                "profile.html",
+                prefs=prefResponse.data,
+                matches=matchResponse.data
+            )
+        except Exception as e:
+            print(e)
+            return render_template("profile.html")
+    return render_template("profile.html")
 
 
 # auth routes
