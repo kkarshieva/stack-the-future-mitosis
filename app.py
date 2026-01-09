@@ -385,6 +385,7 @@ def profile_chat():
         return guard
 
     prompt_type = request.json.get("action")
+
     user_id = get_user_id()
 
     print(f"DEBUG: Prompt received: {prompt_type}, user_id: {user_id}")
