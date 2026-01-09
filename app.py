@@ -2,10 +2,12 @@ import os
 from flask import (
     Flask,
     render_template,
+    render_template_string,
     request,
     redirect,
     url_for,
     session,
+    jsonify,
     flash,
     Response,
 )
@@ -157,6 +159,23 @@ def dashboard():
     guard = require_login()
     if guard:
         return guard
+    if request.method=="GET":
+        try:
+            response = (
+                sb_service()
+                .table("prefs")
+                .select("*")
+                .eq("user_id",get_user_id())
+                .execute()
+            )
+
+            return render_template(
+                "dashboard.html",
+                prefs=response.data
+            )
+        except Exception as e:
+            print(e)
+            return render_template("dashboard.html")
     return render_template("dashboard.html")
 
 
