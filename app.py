@@ -1,4 +1,6 @@
+from email.mime import text
 import os
+import traceback
 from flask import (
     Flask,
     render_template,
@@ -10,14 +12,14 @@ from flask import (
     jsonify,
     flash,
     Response,
-    jsonify,
 )
 from dotenv import load_dotenv
 from supabase import create_client
 from supabase_auth import User
 from image import smiles_to_svg
 import pandas as pd
-from match_compounds import match_compounds
+import google.genai as genai
+import match_compounds as match_compounds
 
 # FILTERED_PATH = "datasets/compounds_filtered.csv"
 # df = pd.read_csv(FILTERED_PATH)
@@ -25,6 +27,8 @@ from match_compounds import match_compounds
 # compounds = df.to_dict(orient="records")
 
 load_dotenv()
+# Configuring Gemini API
+client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 
 # load keys
 SUPABASE_URL = os.environ["SUPABASE_URL"]
@@ -343,6 +347,68 @@ def get_preferences():
         res = response.data[0]
 
     return res
+
+
+@app.route("/api/profile-chat", methods=["POST"])
+def profile_chat():
+    guard = require_login()
+    if guard:
+        return guard
+
+    prompt_type = request.json.get("action")
+    user_id = get_user_id()
+
+    print(f"DEBUG: Prompt received: {prompt_type}, user_id: {user_id}")
+
+    prefs_res = sb_service().table("prefs").select("*").eq("user_id", user_id).execute()
+    matches_res = (
+        sb_service().table("matches").select("*").eq("user_id", user_id).execute()
+    )
+
+    print(f"DEBUG: prefs_res: {prefs_res.data}, matches_res: {matches_res.data}")
+    prefs = prefs_res.data[0] if prefs_res.data else {}
+    matches = matches_res.data
+
+    if not matches:
+        return jsonify({"reply": "You have not matched with any compounds yet!"})
+
+    context = {
+        "preferences": prefs,
+        "matches": [
+            {
+                "name": m["compound_name"],
+                "molecular_weight": m["molecular_weight"],
+                "lipophilicity": m["lipophilicity"],
+                "hba": m["hydrogen_bonding_acceptors"],
+                "hbd": m["hydrogen_bonding_donors"],
+            }
+            for m in matches
+        ],
+    }
+
+    system_prompt = f"""
+            You are a playful scientific personality analyst.
+            You ONLY use the data provided.
+            Do NOT invent compounds or preferences.
+
+        User data:
+        {context}
+
+        User request:
+        {prompt_type}
+
+        Respond in a fun but concise card-style explanation, 
+        like what makes the user unique scientifically, 
+        based on their compound matches and preferences, 
+    no more than 150 words.
+"""
+
+    response = client.models.generate_content(
+        model="gemini-2.5-flash", contents=system_prompt
+    )
+    reply_text = response.text
+    print(f"DEBUG: Gemini response: {response}")
+    return jsonify({"reply": reply_text})
 
 
 # auth routes
