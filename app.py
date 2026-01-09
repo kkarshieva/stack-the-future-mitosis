@@ -57,6 +57,7 @@ def is_logged_in():
 
 def require_login():
     if not is_logged_in():
+        print(f"DEBUG: require_login failed. Session keys: {list(session.keys())}")
         return redirect(url_for("login"))
     return None
 
@@ -85,24 +86,44 @@ def onboarding():
 
             user_id = get_user_id()
 
-            data = {
-                "user_id": user_id,
-                "molecular_weight": molw,
-                "lipophilicity": lip,
-                "hydrogen_bonding_acceptors": hba,
-                "hydrogen_bonding_donors": hbd,
-            }
+            update_data = {}
+            if molw != "na":
+                update_data["molecular_weight"] = molw
+            if lip != "na":
+                update_data["lipophilicity"] = lip
+            if hba != "na":
+                update_data["hydrogen_bonding_acceptors"] = hba
+            if hbd != "na":
+                update_data["hydrogen_bonding_donors"] = hbd
+            update_data["user_id"] = user_id #get user
 
-            response = (
-                sb_service()
-                .table("prefs")
-                .upsert(data, on_conflict="user_id")
-                .execute()
-            )
-            print(response)
+            # Check if user exists in prefs
+            try:
+                check_res = sb_service().table("prefs").select("user_id").eq("user_id", user_id).execute()
+                user_exists = len(check_res.data) > 0
+            except Exception as e:
+                 user_exists = False
+
+            if user_exists:
+                if len(update_data) > 1: # at least 1 preference
+                    response = (
+                        sb_service()
+                        .table("prefs")
+                        .update(update_data)
+                        .eq("user_id", user_id)
+                        .execute()
+                    )
+                else:
+                    response = (
+                        sb_service()
+                        .table("prefs")
+                        .insert(update_data)
+                        .execute()
+                    )
 
         except Exception as e:
-            print(e)
+            # import traceback
+            # traceback.print_exc()
             flash("Something went wrong. Please try again.", "error")
             return render_template("onboarding.html")
         return redirect(url_for("onboarding"))
