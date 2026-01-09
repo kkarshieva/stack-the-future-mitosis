@@ -161,7 +161,7 @@ def dashboard():
         return guard
     if request.method=="GET":
         try:
-            response = (
+            prefResponse = (
                 sb_service()
                 .table("prefs")
                 .select("*")
@@ -169,9 +169,18 @@ def dashboard():
                 .execute()
             )
 
+            matchResponse = (
+                sb_service()
+                .table("matches")
+                .select("*")
+                .eq("user_id",get_user_id())
+                .execute()
+            )
+
             return render_template(
                 "dashboard.html",
-                prefs=response.data
+                prefs=prefResponse.data,
+                matches=matchResponse.data
             )
         except Exception as e:
             print(e)
