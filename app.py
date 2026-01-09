@@ -102,7 +102,6 @@ def onboarding():
                     .eq("user_id", user_id)
                     .execute()
                 )
-                print("UPDATE RESPONSE:", response)
 
         except Exception as e:
             print(e)
