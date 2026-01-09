@@ -122,6 +122,7 @@ def onboarding():
                 "lipophilicity": lip,
                 "hydrogen_bonding_acceptors": hba,
                 "hydrogen_bonding_donors": hbd,
+                "index": 0,
             }
 
             # Check if user exists in prefs
@@ -261,6 +262,8 @@ def profile():
                 .execute()
             )
 
+            print(prefResponse)
+
             matchResponse = (
                 sb_service()
                 .table("matches")
@@ -276,6 +279,25 @@ def profile():
             print(e)
             return render_template("profile.html")
     return render_template("profile.html")
+
+
+def get_preferences():
+    response = (
+        sb_service().table("prefs").select("*").eq("user_id", get_user_id()).execute()
+    )
+
+    res = {
+        "molecular_weight": "n/a",
+        "lip": "n/a",
+        "hba": "n/a",
+        "hbd": "n/a",
+        "index": 0,
+    }
+
+    if response.data:
+        res = response.data[0]
+
+    return res
 
 
 # auth routes

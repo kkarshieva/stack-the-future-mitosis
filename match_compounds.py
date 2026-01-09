@@ -9,7 +9,7 @@ compounds = df.to_dict(orient="records")
 
 
 def match_compounds(molw, lip, hba, hbd):
-    if molw == "na" and lip == "na" and hba == "na" and hbd == "na":
+    if molw == "n/a" and lip == "n/a" and hba == "n/a" and hbd == "n/a":
         return compounds
 
     res = []
@@ -43,7 +43,7 @@ def match_compounds(molw, lip, hba, hbd):
 
 
 def in_range(value, pref):
-    if pref == "na":
+    if pref == "n/a":
         return True
 
     if pref.endswith("+"):

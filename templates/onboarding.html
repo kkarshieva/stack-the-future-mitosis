@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
- <head>
-   <meta charset="UTF-8" />
-   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-   <title>Onboarding - Bonded</title>
-   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
-   <style>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Onboarding - Bonded</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+          rel="stylesheet" />
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
+    <style>
      body {
        background: linear-gradient(to bottom, #a8e6a3, #d4f4d1);
        min-height: 100vh;
@@ -216,123 +218,135 @@
      .alert {
        margin-bottom: 20px;
      }
-   </style>
- </head>
+    </style>
+  </head>
   <body>
     {% include 'partials/navbar.html' %}
     <!-- Large corner decorations -->
-   <div class="chemical-decoration top-left">
-     <i class="bi bi-hexagon"></i>
-   </div>
-   <div class="chemical-decoration top-right">
-     <i class="bi bi-hexagon"></i>
-   </div>
-   <div class="chemical-decoration bottom-left">
-     <i class="bi bi-hexagon"></i>
-   </div>
-   <div class="chemical-decoration bottom-right">
-     <i class="bi bi-hexagon"></i>
-   </div>
-  
-   <!-- Additional side decorations -->
-   <div class="chemical-decoration mid-left medium">
-     <i class="bi bi-circle"></i>
-   </div>
-   <div class="chemical-decoration mid-right medium">
-     <i class="bi bi-triangle"></i>
-   </div>
-  
-   <!-- Top and bottom center decorations -->
-   <div class="chemical-decoration top-center small">
-     <i class="bi bi-hexagon"></i>
-   </div>
-   <div class="chemical-decoration bottom-center small">
-     <i class="bi bi-circle"></i>
-   </div>
-  
-   <!-- Additional small scattered decorations -->
-   <div class="chemical-decoration" style="top: 30%; left: 5%; font-size: 40px; opacity: 0.35;">
-     <i class="bi bi-triangle"></i>
-   </div>
-   <div class="chemical-decoration" style="top: 70%; right: 5%; font-size: 40px; opacity: 0.35;">
-     <i class="bi bi-hexagon"></i>
-   </div>
-   <div class="chemical-decoration" style="top: 25%; right: 15%; font-size: 45px; opacity: 0.4;">
-     <i class="bi bi-circle"></i>
-   </div>
-   <div class="chemical-decoration" style="bottom: 25%; left: 15%; font-size: 45px; opacity: 0.4;">
-     <i class="bi bi-triangle"></i>
-   </div>
-  
-   <div class="main-container">
-     <div class="container">
-       <div class="row justify-content-center">
-         <div class="col-12 col-md-10 col-lg-8">
-           <div class="header-section">
-             <p class="tagline">Choose your compound</p>
-           </div>
-          
-           <div class="onboarding-card">
-             {% with msgs = get_flashed_messages() %}
-               {% if msgs %}
-                 <div class="alert alert-warning" role="alert">
-                   {{ msgs[0] }}
-                 </div>
-               {% endif %}
-             {% endwith %}
-            
-             <form method="POST" action="/onboarding">
-               <div class="mb-3">
-                 <label for="molw" class="form-label">Molecular Weight:</label>
-                 <select class="form-select" id="molw" name="molw">
-                   <option value="na">n/a</option>
-                   <option value="1-100">1-100</option>
-                   <option value="101-200">101-200</option>
-                   <option value="201-300">201-300</option>
-                   <option value="301-400">301-400</option>
-                   <option value="401-500">401-500</option>
-                   <option value="501+">501+</option>
-                 </select>
-               </div>
-              
-               <div class="mb-3">
-                 <label for="lip" class="form-label">Lipophilicity:</label>
-                 <select class="form-select" id="lip" name="lip">
-                   <option value="na">n/a</option>
-                   <option value="&lt0">&lt0</option>
-                   <option value="0-1">0-1</option>
-                   <option value="1-3">1-3</option>
-                   <option value="3-5">3-5</option>
-                   <option value="5+">5+</option>
-                 </select>
-               </div>
-              
-               <div class="mb-3">
-                 <label for="hba" class="form-label">Hydrogen Bonding Acceptors Preference:</label>
-                 <select class="form-select" id="hba" name="hba">
-                   <option value="na">n/a</option>
-                   <option value="0-10">0-10</option>
-                   <option value="11+">11+</option>
-                 </select>
-               </div>
-              
-               <div class="mb-3">
-                 <label for="hbd" class="form-label">Hydrogen Bonding Donors Preference:</label>
-                 <select class="form-select" id="hbd" name="hbd">
-                   <option value="na">n/a</option>
-                   <option value="0-5">0-5</option>
-                   <option value="6+">6+</option>
-                 </select>
-               </div>
-              
-               <button type="submit" class="btn btn-submit">Submit Preferences</button>
-             </form>
-           </div>
-         </div>
-       </div>
-     </div>
-   </div>
-  
-   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
- </body>
+    <div class="chemical-decoration top-left">
+      <i class="bi bi-hexagon"></i>
+    </div>
+    <div class="chemical-decoration top-right">
+      <i class="bi bi-hexagon"></i>
+    </div>
+    <div class="chemical-decoration bottom-left">
+      <i class="bi bi-hexagon"></i>
+    </div>
+    <div class="chemical-decoration bottom-right">
+      <i class="bi bi-hexagon"></i>
+    </div>
+
+    <!-- Additional side decorations -->
+    <div class="chemical-decoration mid-left medium">
+      <i class="bi bi-circle"></i>
+    </div>
+    <div class="chemical-decoration mid-right medium">
+      <i class="bi bi-triangle"></i>
+    </div>
+
+    <!-- Top and bottom center decorations -->
+    <div class="chemical-decoration top-center small">
+      <i class="bi bi-hexagon"></i>
+    </div>
+    <div class="chemical-decoration bottom-center small">
+      <i class="bi bi-circle"></i>
+    </div>
+
+    <!-- Additional small scattered decorations -->
+    <div class="chemical-decoration"
+         style="top: 30%;
+                left: 5%;
+                font-size: 40px;
+                opacity: 0.35">
+      <i class="bi bi-triangle"></i>
+    </div>
+    <div class="chemical-decoration"
+         style="top: 70%;
+                right: 5%;
+                font-size: 40px;
+                opacity: 0.35">
+      <i class="bi bi-hexagon"></i>
+    </div>
+    <div class="chemical-decoration"
+         style="top: 25%;
+                right: 15%;
+                font-size: 45px;
+                opacity: 0.4">
+      <i class="bi bi-circle"></i>
+    </div>
+    <div class="chemical-decoration"
+         style="bottom: 25%;
+                left: 15%;
+                font-size: 45px;
+                opacity: 0.4">
+      <i class="bi bi-triangle"></i>
+    </div>
+
+    <div class="main-container">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-12 col-md-10 col-lg-8">
+            <div class="header-section">
+              <p class="tagline">Choose your compound</p>
+            </div>
+
+            <div class="onboarding-card">
+              {% with msgs = get_flashed_messages() %}
+                {% if msgs %}<div class="alert alert-warning" role="alert">{{ msgs[0] }}</div>{% endif %}
+              {% endwith %}
+
+              <form method="POST" action="/onboarding">
+                <div class="mb-3">
+                  <label for="molw" class="form-label">Molecular Weight:</label>
+                  <select class="form-select" id="molw" name="molw">
+                    <option value="n/a">n/a</option>
+                    <option value="1-100">1-100</option>
+                    <option value="101-200">101-200</option>
+                    <option value="201-300">201-300</option>
+                    <option value="301-400">301-400</option>
+                    <option value="401-500">401-500</option>
+                    <option value="501+">501+</option>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label for="lip" class="form-label">Lipophilicity:</label>
+                  <select class="form-select" id="lip" name="lip">
+                    <option value="n/a">n/a</option>
+                    <option value="&lt0">&lt0</option>
+                    <option value="0-1">0-1</option>
+                    <option value="1-3">1-3</option>
+                    <option value="3-5">3-5</option>
+                    <option value="5+">5+</option>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label for="hba" class="form-label">Hydrogen Bonding Acceptors Preference:</label>
+                  <select class="form-select" id="hba" name="hba">
+                    <option value="n/a">n/a</option>
+                    <option value="0-10">0-10</option>
+                    <option value="11+">11+</option>
+                  </select>
+                </div>
+
+                <div class="mb-3">
+                  <label for="hbd" class="form-label">Hydrogen Bonding Donors Preference:</label>
+                  <select class="form-select" id="hbd" name="hbd">
+                    <option value="n/a">n/a</option>
+                    <option value="0-5">0-5</option>
+                    <option value="6+">6+</option>
+                  </select>
+                </div>
+
+                <button type="submit" class="btn btn-submit">Submit Preferences</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
 </html>
