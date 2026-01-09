@@ -1,0 +1,45 @@
+<style>
+    .nav-link.active-page {
+        background-color: white !important;
+        color: black !important;
+        border-radius: 20px;
+        font-weight: bold;
+        padding-left: 15px !important;
+        padding-right: 15px !important;
+    }
+</style> 
+<nav class="navbar navbar-expand-lg navbar-dark" style="position: absolute; top: 0; width: 100%; z-index: 1000; background: rgba(0, 0, 0, 0.2); backdrop-filter: blur(10px); box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+  <div class="container">
+    <a class="navbar-brand fw-bold fs-2" href="{{ url_for('matching') }}">Bonded</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto align-items-center gap-2">
+        <li class="nav-item">
+          <a class="nav-link fs-6 {% if request.endpoint == 'matching' or request.endpoint == 'api_match' %}active-page{% endif %}" href="{{ url_for('matching') }}">Matching</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link fs-6 {% if request.endpoint == 'profile' %}active-page{% endif %}" href="{{ url_for('profile') }}">Profile</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link fs-6 {% if request.endpoint == 'onboarding' %}active-page{% endif %}" href="{{ url_for('onboarding') }}">Preferences</a>
+        </li>
+        {% if not session.get('access_token') %}
+        <li class="nav-item">
+          <a class="nav-link fs-6 {% if request.endpoint == 'login' %}active-page{% endif %}" href="{{ url_for('login') }}">Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link fs-6 {% if request.endpoint == 'signup' %}active-page{% endif %}" href="{{ url_for('signup') }}">Signup</a>
+        </li>
+        {% else %}
+        <li class="nav-item">
+            <form action="{{ url_for('logout') }}" method="post" class="d-inline">
+                <button type="submit" class="nav-link btn btn-link fs-6 text-white" style="text-decoration: none;">Logout</button>
+            </form>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>

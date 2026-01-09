@@ -218,8 +218,9 @@
      }
    </style>
  </head>
- <body>
-   <!-- Large corner decorations -->
+  <body>
+    {% include 'partials/navbar.html' %}
+    <!-- Large corner decorations -->
    <div class="chemical-decoration top-left">
      <i class="bi bi-hexagon"></i>
    </div>
@@ -268,10 +269,6 @@
        <div class="row justify-content-center">
          <div class="col-12 col-md-10 col-lg-8">
            <div class="header-section">
-             <div class="logo-container">
-               <h1 class="brand-title">Bonded</h1>
-               <img src="{{ url_for('static', filename='beaker.png') }}" alt="Beaker" class="beaker-img" />
-             </div>
              <p class="tagline">Choose your compound</p>
            </div>
           

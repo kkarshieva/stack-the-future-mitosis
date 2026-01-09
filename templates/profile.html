@@ -1,73 +1,286 @@
-{% extends "base.html" %}
-{% block content %}
-    <h1>Profile Page</h1>
-    <h2>Your Preferences</h2>
-  <div style="display: flex; gap: 2rem; align-items: flex-start;">
-    <div style="flex: 1;">
-      <form action="{{ url_for('onboarding') }}" method="POST">
-        <div>
-          <label for="molw">Molecular Weight:</label>
-          <select id="molw" name="molw">
-            {% set options = ["n/a","1-100","101-200","201-300","301-400","401-500","501+"] %}
-            {% for option in options %}
-              <option value="{{ option }}" {% if option == prefs[0].molecular_weight %}selected{% endif %}>{{ option }}</option>
-            {% endfor %}
-          </select>
-        </div>
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+   <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <title>Profile - Bonded</title>
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
+   <style>
+     body {
+       background: linear-gradient(to bottom, #a8e6a3, #d4f4d1);
+       min-height: 100vh;
+       position: relative;
+       overflow-x: hidden;
+     }
+    
+     /*hexagon icons*/
+     .chemical-decoration {
+       position: absolute;
+       opacity: 0.50;
+       color: white;
+       font-size: 80px;
+       z-index: 0;
+       animation: sparkle 3s ease-in-out infinite;
+     }
+    
+     /* Sparkle animation */
+     @keyframes sparkle {
+       0%, 100% {
+         opacity: 0.3;
+         transform: scale(1);
+       }
+       50% {
+         opacity: 0.8;
+         transform: scale(1.1);
+       }
+     }
+    
+     /* Different animation delays for variety */
+     .chemical-decoration:nth-child(1) { animation-delay: 0s; }
+     .chemical-decoration:nth-child(2) { animation-delay: 0.5s; }
+     .chemical-decoration:nth-child(3) { animation-delay: 1s; }
+     .chemical-decoration:nth-child(4) { animation-delay: 1.5s; }
+     .chemical-decoration:nth-child(5) { animation-delay: 0.25s; }
+     .chemical-decoration:nth-child(6) { animation-delay: 0.75s; }
+     .chemical-decoration:nth-child(7) { animation-delay: 1.25s; }
+     .chemical-decoration:nth-child(8) { animation-delay: 1.75s; }
+    
+     .chemical-decoration.top-left { top: 20px; left: 20px; }
+     .chemical-decoration.top-right { top: 20px; right: 20px; }
+     .chemical-decoration.bottom-left { bottom: 20px; left: 20px; }
+     .chemical-decoration.bottom-right { bottom: 20px; right: 20px; }
+    
+     /* Additional positions */
+     .chemical-decoration.mid-left { top: 50%; left: 10%; transform: translateY(-50%); }
+     .chemical-decoration.mid-right { top: 50%; right: 10%; transform: translateY(-50%); }
+     .chemical-decoration.top-center { top: 15%; left: 50%; transform: translateX(-50%); }
+     .chemical-decoration.bottom-center { bottom: 15%; left: 50%; transform: translateX(-50%); }
+    
+     /* Sizes */
+     .chemical-decoration.small { font-size: 50px; opacity: 0.4; }
+     .chemical-decoration.medium { font-size: 60px; opacity: 0.45; }
+    
+     .main-container {
+       position: relative;
+       z-index: 1;
+       min-height: 100vh;
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       padding: 20px;
+     }
+    
+     .header-section {
+       text-align: center;
+       margin-bottom: 30px;
+     }
+    
+     .logo-container {
+       display: inline-flex;
+       align-items: center;
+       gap: 15px;
+       margin-bottom: 10px;
+       justify-content: center;
+       cursor: pointer; /* Click to go home */
+     }
+    
+     .beaker-img {
+       height: 67px;
+       width: auto;
+     }
+    
+     .brand-title {
+       color: white;
+       font-size: 64px;
+       font-weight: bold;
+       margin: 0;
+     }
+    
+     .tagline {
+       color: #ffffff;
+       font-size: 26px;
+       margin-top: 5px;
+     }
+    
+     .onboarding-card {
+       background: white;
+       border-radius: 8px;
+       padding: 30px;
+       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+       width: 100%;
+       height: 100%; /* Fill height for equal columns */
+     }
+    
+     .form-label {
+       color: black;
+       font-weight: 500;
+       margin-bottom: 8px;
+     }
+    
+     .form-control,
+     .form-select {
+       border: 1px solid #87ceeb;
+       border-radius: 4px;
+       padding: 10px;
+     }
+    
+     .form-control:focus,
+     .form-select:focus {
+       border-color: #87ceeb;
+       box-shadow: 0 0 0 0.2rem rgba(135, 206, 235, 0.25);
+     }
+    
+     .btn-submit {
+       background-color: #81c784;
+       color: white;
+       border: none;
+       border-radius: 6px;
+       padding: 12px;
+       font-size: 16px;
+       font-weight: 500;
+       width: 100%;
+       margin-top: 10px;
+     }
+    
+     .btn-submit:hover {
+       background-color: #66bb6a;
+       color: white;
+     }
 
-        <div>
-          <label for="lip">Lipophilicity:</label>
-          <select id="lip" name="lip">
-            {% set options = ["n/a","&lt0","0-1","1-3","3-5","5+"] %}
-            {% for option in options %}
-              <option value="{{ option }}" {% if option == prefs[0].lipophilicity %}selected{% endif %}>{{ option }}</option>
-            {% endfor %}
-          </select>
-        </div>
+     /* Matches List Styling */
+     .match-list {
+        list-style: none;
+        padding-left: 0;
+        max-height: 500px;
+        overflow-y: auto;
+     }
+     .match-item {
+        margin-bottom: 1em;
+        padding: 1em;
+        border: 1px solid #e0e0e0;
+        border-radius: 6px;
+        background: #f9f9f9;
+        transition: transform 0.2s;
+     }
+     .match-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+     }
+     
+     .nav-links a {
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+        margin: 0 10px;
+        font-size: 1.1rem;
+     }
+     .nav-links a:hover {
+        text-decoration: underline;
+     }
+   </style>
+ </head>
+ <body>
+   {% include 'partials/navbar.html' %}
+   <!-- Background Decorations -->
+   <div class="chemical-decoration top-left"><i class="bi bi-hexagon"></i></div>
+   <div class="chemical-decoration top-right"><i class="bi bi-hexagon"></i></div>
+   <div class="chemical-decoration bottom-left"><i class="bi bi-hexagon"></i></div>
+   <div class="chemical-decoration bottom-right"><i class="bi bi-hexagon"></i></div>
+   <div class="chemical-decoration mid-left medium"><i class="bi bi-circle"></i></div>
+   <div class="chemical-decoration mid-right medium"><i class="bi bi-triangle"></i></div>
+   <div class="chemical-decoration top-center small"><i class="bi bi-hexagon"></i></div>
+   <div class="chemical-decoration bottom-center small"><i class="bi bi-circle"></i></div>
+   
+   <div class="main-container">
+     <div class="container">
+       <div class="row header-section">
+         <div class="col-12">
+            <a href="{{ url_for('matching') }}" style="text-decoration:none;">
+            </a>
 
-        <div>
-          <label for="hba">Hydrogen Bonding Acceptors Preference:</label>
-          <select id="hba" name="hba">
-            {% set options = ["n/a","0-10","11+"] %}
-            {% for option in options %}
-              <option value="{{ option }}" {% if option == prefs[0].hydrogen_bonding_acceptors %}selected{% endif %}>{{ option }}</option>
-            {% endfor %}
-          </select>
-        </div>
+         </div>
+       </div>
 
-        <div>
-          <label for="hbd">Hydrogen Bonding Donors Preference:</label>
-          <select id="hbd" name="hbd">
-            {% set options = ["n/a","0-5","6+"] %}
-            {% for option in options %}
-              <option value="{{ option }}" {% if option == prefs[0].hydrogen_bonding_donors %}selected{% endif %}>{{ option }}</option>
-            {% endfor %}
-          </select>
-        </div>
+       <div class="row justify-content-center">
+         <!-- Left Column: Preferences -->
+         <div class="col-lg-6 mb-4">
+           <div class="onboarding-card">
+             <h3 class="mb-4">Your Preferences</h3>
+             <form action="{{ url_for('onboarding') }}" method="POST">
+                <div class="mb-3">
+                    <label for="molw" class="form-label">Molecular Weight:</label>
+                    <select class="form-select" id="molw" name="molw">
+                        {% set options = ["n/a","1-100","101-200","201-300","301-400","401-500","501+"] %}
+                        {% for option in options %}
+                        <option value="{{ option }}" {% if prefs and option == prefs[0].molecular_weight %}selected{% endif %}>{{ option }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-        <div>
-          <input type="submit" value="Save">
-        </div>
-      </form>
-    </div>
-    <div style="flex: 1; border-left: 1px solid #ccc; padding-left: 1rem;">
-      <h2>Your Matches</h2>
-      {% if matches %}
-        <ul style="list-style: none; padding-left: 0;">
-          {% for match in matches %}
-            <li style="margin-bottom: 1em; padding: 0.5em; border: 1px solid #ddd; border-radius: 4px;">
-              {% for key, value in match.items() %}
-                {% if key != 'user_id' %}
-                  <strong>{{ key.replace('_', ' ') }}:</strong> {{ value }}<br>
-                {% endif %}
-              {% endfor %}
-            </li>
-          {% endfor %}
-        </ul>
-      {% else %}
-        <p>No matches found.</p>
-      {% endif %}
-    </div>
-  </div>
-{% endblock content %}
+                <div class="mb-3">
+                    <label for="lip" class="form-label">Lipophilicity:</label>
+                    <select class="form-select" id="lip" name="lip">
+                        {% set options = ["n/a","&lt0","0-1","1-3","3-5","5+"] %}
+                        {% for option in options %}
+                        <option value="{{ option }}" {% if prefs and option == prefs[0].lipophilicity %}selected{% endif %}>{{ option }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
 
+                <div class="mb-3">
+                    <label for="hba" class="form-label">Hydrogen Bonding Acceptors:</label>
+                    <select class="form-select" id="hba" name="hba">
+                        {% set options = ["n/a","0-10","11+"] %}
+                        {% for option in options %}
+                        <option value="{{ option }}" {% if prefs and option == prefs[0].hydrogen_bonding_acceptors %}selected{% endif %}>{{ option }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label for="hbd" class="form-label">Hydrogen Bonding Donors:</label>
+                    <select class="form-select" id="hbd" name="hbd">
+                        {% set options = ["n/a","0-5","6+"] %}
+                        {% for option in options %}
+                        <option value="{{ option }}" {% if prefs and option == prefs[0].hydrogen_bonding_donors %}selected{% endif %}>{{ option }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-submit">Update Preferences</button>
+             </form>
+           </div>
+         </div>
+
+         <!-- Right Column: Matches -->
+         <div class="col-lg-6 mb-4">
+            <div class="onboarding-card">
+              <h3 class="mb-4">Your Matches</h3>
+              {% if matches %}
+                <ul class="match-list">
+                  {% for match in matches %}
+                    <li class="match-item">
+                      {% for key, value in match.items() %}
+                        {% if key != 'user_id' %}
+                          <div>
+                              <strong>{{ key.replace('_', ' ') | title }}:</strong> {{ value }}
+                          </div>
+                        {% endif %}
+                      {% endfor %}
+                    </li>
+                  {% endfor %}
+                </ul>
+              {% else %}
+                <p class="text-muted">No matches yet. Keep swiping!</p>
+                <a href="{{ url_for('matching') }}" class="btn btn-outline-primary w-100 mt-2">Go Match</a>
+              {% endif %}
+            </div>
+         </div>
+       </div>
+     </div>
+   </div>
+  
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+ </body>
+</html>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sign Up - Bonded</title>
+    <title>Bonded</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
     <style>
@@ -14,6 +14,7 @@
         overflow-x: hidden;
       }
       
+      /*hexagon icons*/
       .chemical-decoration {
         position: absolute;
         opacity: 0.50;
@@ -35,7 +36,7 @@
         }
       }
       
-      /* Different animation delays for variety */
+      /* animation delay */
       .chemical-decoration:nth-child(1) {
         animation-delay: 0s;
       }
@@ -88,7 +89,6 @@
         right: 20px;
       }
       
-      /* Additional positions for more decorations */
       .chemical-decoration.mid-left {
         top: 50%;
         left: 10%;
@@ -113,13 +113,11 @@
         transform: translateX(-50%);
       }
       
-      /* Smaller decorations */
       .chemical-decoration.small {
         font-size: 50px;
         opacity: 0.4;
       }
       
-      /* Medium decorations */
       .chemical-decoration.medium {
         font-size: 60px;
         opacity: 0.45;
@@ -161,75 +159,36 @@
       }
       
       .tagline {
-        color: #fffefe;
+        color: #ffffff;
         font-size: 26px;
         margin-top: 5px;
       }
       
-      .signup-card {
-        background: white;
-        border-radius: 8px;
-        padding: 40px;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        max-width: 450px;
-        width: 100%;
-        margin: 0 auto;
-      }
-      
-      .form-label {
-        color: black;
-        font-weight: 500;
-        margin-bottom: 8px;
-      }
-      
-      .form-control {
-        border: 1px solid #87ceeb;
-        border-radius: 4px;
-        padding: 10px;
-      }
-      
-      .form-control:focus {
-        border-color: #87ceeb;
-        box-shadow: 0 0 0 0.2rem rgba(135, 206, 235, 0.25);
-      }
-      
-      .btn-signup {
+      .btn-find-match {
         background-color: #81c784;
         color: white;
         border: none;
-        border-radius: 6px;
-        padding: 12px;
-        font-size: 16px;
-        font-weight: 500;
-        width: 100%;
-        margin-top: 10px;
+        border-radius: 50px; 
+        padding: 15px 40px;
+        font-size: 24px;
+        font-weight: 600;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
       }
       
-      .btn-signup:hover {
+      .btn-find-match:hover {
         background-color: #66bb6a;
         color: white;
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.25);
       }
       
-      .login-link {
-        text-align: center;
-        margin-top: 20px;
-        color: black;
-        font-size: 14px;
-      }
-      
-      .login-link a {
-        color: black;
-        text-decoration: underline;
-      }
-      
-      .alert {
-        margin-bottom: 20px;
-      }
     </style>
   </head>
   <body>
     {% include 'partials/navbar.html' %}
-    <!-- Large corner decorations -->
     <div class="chemical-decoration top-left">
       <i class="bi bi-hexagon"></i>
     </div>
@@ -243,7 +202,6 @@
       <i class="bi bi-hexagon"></i>
     </div>
     
-    <!-- Additional side decorations -->
     <div class="chemical-decoration mid-left medium">
       <i class="bi bi-circle"></i>
     </div>
@@ -251,7 +209,6 @@
       <i class="bi bi-triangle"></i>
     </div>
     
-    <!-- Top and bottom center decorations -->
     <div class="chemical-decoration top-center small">
       <i class="bi bi-hexagon"></i>
     </div>
@@ -259,7 +216,7 @@
       <i class="bi bi-circle"></i>
     </div>
     
-    <!-- Additional small scattered decorations -->
+    <!-- other small decorations -->
     <div class="chemical-decoration" style="top: 30%; left: 5%; font-size: 40px; opacity: 0.35;">
       <i class="bi bi-triangle"></i>
     </div>
@@ -282,35 +239,13 @@
                 <h1 class="brand-title">Bonded</h1>
                 <img src="{{ url_for('static', filename='beaker.png') }}" alt="Beaker" class="beaker-img" />
               </div>
-              <p class="tagline">Meet your compound match!</p>
+              <p class="tagline">Meet your dream compound</p>
             </div>
             
-            <div class="signup-card">
-              {% with msgs = get_flashed_messages() %}
-                {% if msgs %}
-                  <div class="alert alert-warning" role="alert">
-                    {{ msgs[0] }}
-                  </div>
-                {% endif %}
-              {% endwith %}
-              
-              <form method="post">
-                <div class="mb-3">
-                  <label for="email" class="form-label">Email:</label>
-                  <input type="email" class="form-control" id="email" name="email" required />
-                </div>
-                
-                <div class="mb-3">
-                  <label for="password" class="form-label">Password:</label>
-                  <input type="password" class="form-control" id="password" name="password" required />
-                </div>
-                
-                <button type="submit" class="btn btn-signup">Sign Up</button>
-              </form>
-              
-              <div class="login-link">
-                Already have an account? <a href="/login">Login</a>
-              </div>
+            <div class="landing-card">
+              <a href="{{ url_for('login') }}" class="btn-find-match">
+                Find your match
+              </a>
             </div>
           </div>
         </div>
@@ -320,4 +255,3 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
-

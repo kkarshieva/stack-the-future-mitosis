@@ -37,15 +37,7 @@
     <div class="w-100 h-100 overflow-auto d-flex flex-column justify-content-between">
       <div class="container">
 
-        <a href="{{ url_for('profile') }}">
-          <button>Go to Profile</button>
-        </a>
-        <a href="{{ url_for('matching') }}">
-          <button>Go to Matching</button>
-        </a>
-        <a href="{{ url_for('onboarding') }}">
-          <button>Go to Onboarding</button>
-        </a>
+        {% include 'partials/navbar.html' %}
 
         {% block content %}
           <h1>Welcome to home!</h1>
