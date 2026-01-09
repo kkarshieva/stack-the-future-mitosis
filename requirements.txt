@@ -1,5 +1,7 @@
-black==24.10.0
-djlint==1.36.3
 Flask==3.1.0
+gunicorn
 python-dotenv==1.0.1
 rdkit==2024.9.6
+supabase==2.7.4
+pandas==2.2.3
+supabase-auth==2.7.0
