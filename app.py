@@ -251,6 +251,12 @@ def matching():
     guard = require_login()
     if guard:
         return guard
+    res = {
+        "molecular_weight": None,
+        "lipophilicity": None,
+        "hydrogen_bonding_acceptors": None,
+        "hydrogen_bonding_donors": None,
+    }
 
     prefs = get_preferences()
 
@@ -268,8 +274,8 @@ def matching():
     idx = prefs["index"]
 
     if idx >= len(compounds):
-        return render_template("matching.html", done=True)
-
+        return render_template("matching.html", done=True, res=res)
+    
     compound = compounds[idx]
 
     res = set_match_info(prefs, compound)
