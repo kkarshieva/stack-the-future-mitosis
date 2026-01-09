@@ -69,7 +69,7 @@ def get_user_id():
 
 @app.route("/", methods=["GET"])
 def root():
-    return render_template("base.html")
+    return render_template("landing.html")
 
 
 @app.route("/onboarding", methods=["GET", "POST"])
