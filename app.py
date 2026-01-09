@@ -8,6 +8,7 @@ from flask import (
     session,
     flash,
     Response,
+    jsonify,
 )
 from dotenv import load_dotenv
 from supabase import create_client
@@ -110,7 +111,7 @@ def onboarding():
     return render_template("onboarding.html")
 
 
-@app.route("/matching", methods=["GET", "POST"])
+@app.route("/matching")
 def matching():
     guard = require_login()
     if guard:
@@ -118,28 +119,38 @@ def matching():
 
     if "index" not in session:
         session["index"] = 0
-        session["accepted"] = []
-        session["rejected"] = []
-
-    if request.method == "POST":
-        action = request.form.get("action")
-        idx = session["index"]
-        compound = compounds[idx]
-
-        if action == "like":
-            session["accepted"].append(compound)
-        else:
-            session["rejected"].append(compound)
-
-        session["index"] += 1
 
     idx = session["index"]
+
     if idx >= len(compounds):
-        return "No more compounds!"
+        return render_template("matching.html", done=True)
 
     compound = compounds[idx]
     return render_template(
-        "matching.html", name=compound["Name"], smiles=compound["Smiles"]
+        "matching.html", name=compound["Name"], smiles=compound["Smiles"], done=False
+    )
+
+
+@app.route("/api/match", methods=["POST"])
+def api_match():
+    guard = require_login()
+    if guard:
+        return guard
+
+    idx = session.get("index", 0)
+
+    if idx >= len(compounds):
+        return jsonify({"done": True})
+
+    session["index"] = idx + 1
+
+    next_compound = compounds[idx]
+    return jsonify(
+        {
+            "done": False,
+            "name": next_compound["Name"],
+            "smiles": next_compound["Smiles"],
+        }
     )
 
 

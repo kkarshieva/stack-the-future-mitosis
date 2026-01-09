@@ -2,49 +2,116 @@
 
 {% block styles %}
     <style>
+        body {
+            overflow-x: hidden;
+            background: 
+                radial-gradient(circle at 10% 70%, rgba(135, 211, 124, 0.35), transparent 30%),
+                radial-gradient(circle at 95% 30%, rgba(135, 211, 124, 0.35), transparent 30%);
+        }
+
         .card-container {
             max-width: 450px;
             margin: 20px auto;
         }
 
         .card {
-            border-radius: 24px;
+            border-radius: 16px;
             border: none;
+            padding: 1rem;
         }
 
         .compound-card {
-            transition: transform 0.3s ease, opacity 0.3s ease;
+            transition: transform 0.4s ease, opacity 0.4s ease;
+        }
+
+        .swipe-left {
+            transform: translateX(-150%) rotate(-4deg);
+            opacity: 0;
+        }
+
+        .swipe-right {
+            transform: translateX(150%) rotate(4deg);
+            opacity: 0;
+        }
+
+        .list-group {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;       
+            gap: 6px;          
+            margin: auto 1rem;   
+        }
+
+        .list-group-item {
+            background: rgba(245, 255, 245, 0.7);
+            color: #444;
+            font-size: 0.9rem;
+            border-radius: 50px;
+            border: none;         
         }
 
         .match-btn {
-            width: 64px;
-            height: 64px;
+            width: 58px;
+            height: 58px;
             border-radius: 50%;
-            font-size: 2rem;
+            font-size: 1.8rem;
+            transition: transform 0.2s ease, background-color 0.2s ease;
         }
 
-        .smiles-text {
+        .compound-text {
             font-family: monospace;
             font-size: 0.85rem;
+            color: #333;
+        }
+
+        .match-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .btn-outline-success {
+            border-color: #81c784;
+            border-width: 2px;
+            color: #81c784;
+        }
+
+        .btn-outline-success:hover {
+            background-color: #81c784;
+            color: white;
+        }
+
+        .btn-outline-danger {
+            border-color: #e57373;
+            border-width: 2px;
+            color: #e57373;
+        }
+
+        .btn-outline-danger:hover {
+            background-color: #e57373;
+            color: white;
         }
     </style>
 {% endblock styles %}
 
 {% block content %}
-    <div class="matching-container mt-5">
-        <h2 class="text-center mb-4">Bond with Your Compound</h2>
-        <div class="card-container text-center">
-            <div id="compoundCard" class="card compound-card shadow-lg">
 
-                <img src="{{ url_for('get_compound_image', smiles=smiles) }}"
+    <div class="matching-container mt-5">
+        <h2 class="text-center mb-4">
+            Bond with Your Compound
+            <i class="bi bi-hexagon"></i>
+        </h2>
+        <div class="card-container text-center">
+            <div id="compoundCard" class="card compound-card shadow">
+
+                <img id="compoundImage"
+                     src="{{ url_for('get_compound_image', smiles=smiles) }}"
                      class="card-img-top"
                      alt="Compound structure image"
                      width="400px"
                      height="400px" />
 
                 <div class="card-body">
-                    <div class="smiles-text mb-3">
-                        <strong>{{ name }}</strong>
+                    <div class="compound-text mb-3">
+                        <strong id="compoundName">{{ name }}</strong>
                         <br>
                         <span id="smiles">{{ smiles }}</span>
                     </div>
@@ -57,87 +124,81 @@
                         <li class="list-group-item">And a fifth one</li>
                     </ul>
 
-                    <form method="post">
-                        <div class="d-flex justify-content-around mt-4">
-                            <button id="dislikeBtn"
-                                    class="btn btn-outline-danger match-btn"
-                                    data-bs-toggle="tooltip"
-                                    title="Skip"
-                                    type="submit"
-                                    name="action"
-                                    value="skip">
-                                <i class="bi bi-x"></i>
-                            </button>
+                    <div class="d-flex justify-content-around mt-4">
+                        <button id="dislikeBtn"
+                                class="btn btn-outline-danger match-btn"
+                                data-bs-toggle="tooltip"
+                                title="Skip"
+                                type="button">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
 
-                            <button id="likeBtn"
-                                    class="btn btn-outline-success match-btn"
-                                    data-bs-toggle="tooltip"
-                                    title="Like"
-                                    type="submit"
-                                    name="action"
-                                    value="like">
-                                <i class="bi bi-check"></i>
-                            </button>
-                        </div>
-
-                    </form>
+                        <button id="likeBtn"
+                                class="btn btn-outline-success match-btn"
+                                data-bs-toggle="tooltip"
+                                title="Like"
+                                type="button">
+                            <i class="bi bi-suit-heart"></i>
+                        </button>
+                    </div>
                 </div>
 
             </div>
         </div>
-
     </div>
 
 {% endblock content %}
 
-<!-- {% block scripts %}
+{% block scripts %}
     <script>
-  // This will eventually come from Flask / JSON
-  const compounds = {{ compoundList , tojson }};
+        const card = document.getElementById("compoundCard");
+        const likeBtn = document.getElementById("likeBtn");
+        const dislikeBtn = document.getElementById("dislikeBtn");
 
-  let index = 0;
+        const name = document.getElementById("compoundName");
+        const smiles = document.getElementById("smiles");
+        const img = document.getElementById("compoundImage");
 
-  const card = document.getElementById("compoundCard");
-  const img = document.getElementById("compoundImg");
-  const smilesEl = document.getElementById("smiles");
-  const chemblEl = document.getElementById("chemblId");
+        async function swipe(direction) {
+            likeBtn.disabled = true;
+            dislikeBtn.disabled = true;
 
-  function loadCompound() {
-    if (index >= compounds.length) {
-      card.innerHTML = `
-        <div class="card-body">
-          <h5>No more compounds 🎉</h5>
-        </div>`;
-      return;
+            card.classList.add(direction === "like" ? "swipe-right" : "swipe-left");
+
+            const res = await fetch("/api/match", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ action: direction })
+            });
+
+            const data = await res.json();
+
+            setTimeout(() => {
+                card.classList.remove("swipe-left", "swipe-right");
+
+                if (data.done) {
+                    card.innerHTML = "<h3 class='p-4'>No more compounds!</h3>";
+                    return;
+                }
+
+                name.textContent = data.name;
+                smiles.textContent = data.smiles;
+                img.src = `/compound-image?smiles=${encodeURIComponent(data.smiles)}`;
+
+                likeBtn.disabled = false;
+                dislikeBtn.disabled = false;
+            }, 400);
+        }
+
+        likeBtn.addEventListener("click", () => swipe("like"));
+        dislikeBtn.addEventListener("click", () => swipe("skip"));
+
+        document.addEventListener('keydown', function (event) {
+        if (event.key === 'ArrowLeft') {
+            swipe("skip")
+        } else if (event.key === 'ArrowRight') {
+            swipe("like")
     }
-
-    const c = compounds[index];
-
-    img.src = c.image_url;
-    smilesEl.textContent = c.smiles;
-    chemblEl.textContent = c.chembl_id;
-
-    card.classList.remove("swipe-left", "swipe-right");
-  }
-
-  function swipe(direction) {
-    card.classList.add(direction === "left" ? "swipe-left" : "swipe-right");
-
-    setTimeout(() => {
-      // TODO: send like/dislike to backend if you want
-      index++;
-      loadCompound();
-    }, 300);
-  }
-
-  document.getElementById("dislikeBtn").onclick = () => swipe("left");
-  document.getElementById("likeBtn").onclick = () => swipe("right");
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "ArrowLeft") swipe("left");
-    if (e.key === "ArrowRight") swipe("right");
-  });
-
-  loadCompound();
-</script>
-{% endblock scripts %} -->
+});
+    </script>
+{% endblock scripts %}
