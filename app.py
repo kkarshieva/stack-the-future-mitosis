@@ -18,8 +18,8 @@ from supabase import create_client
 from supabase_auth import User
 from image import smiles_to_svg
 import pandas as pd
+from match_compounds import match_compounds
 import google.genai as genai
-import match_compounds as match_compounds
 
 # FILTERED_PATH = "datasets/compounds_filtered.csv"
 # df = pd.read_csv(FILTERED_PATH)
