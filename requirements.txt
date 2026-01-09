@@ -6,3 +6,4 @@ supabase==2.7.4
 pandas==2.2.3
 supabase-auth==2.7.0
 google-genai
+scipy

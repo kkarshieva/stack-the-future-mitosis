@@ -181,8 +181,10 @@
         text-decoration: underline;
      }
      .text-muted {
-        display: hidden;
         color: #6c757d !important;
+     }
+     .hidden {
+        display: none;
      }
     </style>
   </head>
@@ -323,11 +325,7 @@
       <i class="bi bi-chat-dots-fill fs-4"></i>
     </button>
 
-    <div id="chatbotPopup"
-         class="card position-fixed bottom-0 end-0 m-4 shadow d-none"
-         style="width:600px;
-                height: 550px;
-                z-index:1060">
+    <div id="chatbotPopup" class="card position-fixed bottom-0 end-0 m-4 shadow d-none" style="width:600px; height: 550px; z-index:1060">
 
       <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
         <span>🧪 Dr. Spark</span>
@@ -350,87 +348,55 @@
         </div>
       </div>
 
-      <div id="chatbotMessages"
-           class="card-body"
-           style="height:200px;
-                  overflow-y:auto;
-                  background:#f8f9fa"></div>
-      <div class="text-muted">Thinking like a chemist...</div>
+      <div id="chatbotMessages" class="card-body" style="height:200px; overflow-y:auto; background:#f8f9fa">
+      </div>
+      <div class="hidden">Thinking like a chemist...</div>
 
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-      <script>
-    async function runProfileChat(promptText) {
-        const box = document.getElementById("profile-chat-result");
-        box.innerHTML = "<em>Thinking like a chemist...</em>";
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  (() => {
+  const chatContainer = document.getElementById("chatbotMessages");
+  const chatPopup = document.getElementById("chatbotPopup");
+  const toggleButton = document.getElementById("chatbotToggle");
+  const closeButton = document.getElementById("chatbotClose");
 
-        try {
-          const res = await fetch("/api/profile-chat", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ action: promptText })
-        });
+  toggleButton.addEventListener("click", () => chatPopup.classList.toggle("d-none"));
+  closeButton.addEventListener("click", () => chatPopup.classList.add("d-none"));
 
-        const data = await res.json();
-        box.innerText = data.reply;
-        } catch (err) {
-            box.innerText = "Something went wrong in the lab 🧪";
-          }
-      }
-      </script>
+  function addMessage(text, { type = "primary", align = "start" } = {}) {
+    const msg = document.createElement("div");
+    msg.className = `alert alert-${type} p-2 mb-2 text-${align}`;
+    msg.textContent = text;
+    chatContainer.appendChild(msg);
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+    return msg;
+  }
 
-      <script>
-      const chatbotMessages = document.getElementById("chatbotMessages");
+  async function sendChat(text) {
+    if (chatContainer.textContent.includes("Waiting for analysis")) {
+      chatContainer.textContent = "";
+    }
 
-      async function sendChatPrompt(text) {
-        if (chatbotMessages.innerText.includes("Waiting for analysis")) {
-           chatbotMessages.innerHTML = "";
-        }
+    addMessage(text, { type: "primary", align: "end" });
+    const thinking = addMessage("Thinking like a chemist… 🧪", { type: "success" });
 
-        chatbotMessages.innerHTML += `
-          <div class="alert alert-primary p-2 mb-2 text-end">
-            ${text}
-          </div>
-        `;
+    try {
+      const res = await fetch("/api/profile-chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: text })
+      });
+      const data = await res.json();
+      thinking.textContent = data.reply;
+    } catch {
+      thinking.textContent = "Something went wrong in the lab ⚠️";
+    }
+  }
 
-        const thinkingId = "thinking-" + Date.now();
-        chatbotMessages.innerHTML += `
-          <div id="${thinkingId}" class="alert alert-success p-2 mb-2">
-              Thinking like a chemist… 🧪
-          </div>
-        `;
+  window.runProfileChat = sendChat;
+  window.sendChatPrompt = sendChat;
+  })();
+</script>
 
-        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-
-        try {
-          const res = await fetch("/api/profile-chat", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ action: text })
-          });
-
-          const data = await res.json();
-          document.getElementById(thinkingId).innerText = data.reply;
-          } catch (err) {
-          document.getElementById(thinkingId).innerText =
-              "Something went wrong in the lab ⚠️";
-        }
-
-        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-        }
-      </script>
-
-      <script>
-      const chatbotToggle = document.getElementById("chatbotToggle");
-      const chatbotPopup = document.getElementById("chatbotPopup");
-      const chatbotClose = document.getElementById("chatbotClose");
-
-      chatbotToggle.onclick = () => {
-        chatbotPopup.classList.toggle("d-none");
-      };
-
-      chatbotClose.onclick = () => {
-        chatbotPopup.classList.add("d-none");
-        };
-      </script>
     </body>
   </html>
