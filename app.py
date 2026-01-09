@@ -14,14 +14,14 @@ from flask import (
 )
 from dotenv import load_dotenv
 from supabase import create_client
+from supabase_auth import User
 from image import smiles_to_svg
 import pandas as pd
 
 FILTERED_PATH = "datasets/compounds_filtered.csv"
 df = pd.read_csv(FILTERED_PATH)
-df = df[["Name", "Smiles"]]  # keep only needed columns
+df = df[["Name", "Smiles", "Molecular Weight", "AlogP", "HBA", "HBD"]]
 compounds = df.to_dict(orient="records")
-
 
 load_dotenv()
 
@@ -65,6 +65,36 @@ def require_login():
 def get_user_id():
     u = sb_user().auth.get_user()
     return u.user.id
+
+
+def save_match(
+    sb_client,
+    user_id: str,
+    compound_name: str,
+    smiles: str,
+    properties: dict | None = None,
+):
+    data = {
+        "user_id": user_id,
+        "compound_name": compound_name,
+        "smiles": smiles,
+    }
+
+    if properties:
+        data.update(
+            {
+                "molecular_weight": str(properties.get("molecular_weight", "")),
+                "lipophilicity": str(properties.get("lipophilicity", "")),
+                "hydrogen_bonding_acceptors": str(
+                    properties.get("hydrogen_bonding_acceptors", "")
+                ),
+                "hydrogen_bonding_donors": str(
+                    properties.get("hydrogen_bonding_donors", "")
+                ),
+            }
+        )
+
+    sb_client.table("matches").insert(data).execute()
 
 
 @app.route("/", methods=["GET"])
@@ -131,8 +161,11 @@ def matching():
     if guard:
         return guard
 
+    user_id = get_user_id()
+
     if "index" not in session:
         session["index"] = 0
+        session["accepted"] = []
 
     idx = session["index"]
 
@@ -140,8 +173,44 @@ def matching():
         return render_template("matching.html", done=True)
 
     compound = compounds[idx]
+
+    if request.method == "POST":
+        action = request.form.get("action")
+
+        if action == "like":
+            session["accepted"].append(compound)
+
+            properties = {
+                "molecular_weight": compound.get("Molecular Weight"),
+                "lipophilicity": compound.get("AlogP"),
+                "hydrogen_bonding_acceptors": compound.get("HBA"),
+                "hydrogen_bonding_donors": compound.get("HBD"),
+            }
+
+            try:
+                save_match(
+                    sb_user(),
+                    user_id,
+                    compound.get("Name"),
+                    compound.get("Smiles"),
+                    properties,
+                )
+            except Exception as e:
+                print("Error saving match:", e)
+
+        session["index"] += 1
+
+        return redirect(url_for("matching"))
+
     return render_template(
-        "matching.html", name=compound["Name"], smiles=compound["Smiles"], done=False
+        "matching.html",
+        name=compound.get("Name"),
+        smiles=compound.get("Smiles"),
+        molecular_weight=compound.get("Molecular Weight"),
+        lipophilicity=compound.get("AlogP"),
+        hba=compound.get("HBA"),
+        hbd=compound.get("HBD"),
+        done=False,
     )
 
 
