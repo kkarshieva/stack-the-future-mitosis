@@ -122,8 +122,6 @@ def onboarding():
                     )
 
         except Exception as e:
-            # import traceback
-            # traceback.print_exc()
             flash("Something went wrong. Please try again.", "error")
             return render_template("onboarding.html")
         return redirect(url_for("onboarding"))
