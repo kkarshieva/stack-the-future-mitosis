@@ -22,9 +22,6 @@
         <li class="nav-item">
           <a class="nav-link fs-6 {% if request.endpoint == 'profile' %}active-page{% endif %}" href="{{ url_for('profile') }}">Profile</a>
         </li>
-        <li class="nav-item">
-            <a class="nav-link fs-6 {% if request.endpoint == 'onboarding' %}active-page{% endif %}" href="{{ url_for('onboarding') }}">Preferences</a>
-        </li>
         {% if not session.get('access_token') %}
         <li class="nav-item">
           <a class="nav-link fs-6 {% if request.endpoint == 'login' %}active-page{% endif %}" href="{{ url_for('login') }}">Login</a>

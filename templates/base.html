@@ -34,10 +34,9 @@
 
   </head>
   <body>
+    {% include 'partials/navbar.html' %}
     <div class="w-100 h-100 overflow-auto d-flex flex-column justify-content-between">
       <div class="container">
-
-        {% include 'partials/navbar.html' %}
 
         {% block content %}
           <h1>Welcome to home!</h1>
