@@ -116,16 +116,13 @@ def onboarding():
 
             user_id = get_user_id()
 
-            update_data = {}
-            if molw != "na":
-                update_data["molecular_weight"] = molw
-            if lip != "na":
-                update_data["lipophilicity"] = lip
-            if hba != "na":
-                update_data["hydrogen_bonding_acceptors"] = hba
-            if hbd != "na":
-                update_data["hydrogen_bonding_donors"] = hbd
-            update_data["user_id"] = user_id  # get user
+            update_data = {
+                "user_id": user_id,
+                "molecular_weight": molw,
+                "lipophilicity": lip,
+                "hydrogen_bonding_acceptors": hba,
+                "hydrogen_bonding_donors": hbd,
+            }
 
             # Check if user exists in prefs
             try:
@@ -141,21 +138,20 @@ def onboarding():
                 user_exists = False
 
             if user_exists:
-                if len(update_data) > 1:  # at least 1 preference
-                    response = (
-                        sb_service()
-                        .table("prefs")
-                        .update(update_data)
-                        .eq("user_id", user_id)
-                        .execute()
-                    )
-                else:
-                    response = sb_service().table("prefs").insert(update_data).execute()
+                response = (
+                    sb_service()
+                    .table("prefs")
+                    .update(update_data)
+                    .eq("user_id", user_id)
+                    .execute()
+                )
+            else:
+                response = sb_service().table("prefs").insert(update_data).execute()
 
         except Exception as e:
             flash("Something went wrong. Please try again.", "error")
             return render_template("onboarding.html")
-        return redirect(url_for("onboarding"))
+        return redirect(url_for("matching"))
     return render_template("onboarding.html")
 
 
@@ -338,7 +334,7 @@ def login_post():
 
     session["access_token"] = resp.session.access_token
     session["refresh_token"] = resp.session.refresh_token
-    return redirect(url_for("onboarding"))
+    return redirect(url_for("profile"))
 
 
 @app.post("/logout")
