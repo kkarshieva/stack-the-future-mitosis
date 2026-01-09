@@ -85,24 +85,21 @@ def onboarding():
 
             user_id = get_user_id()
 
-            update_data = {}
-            if molw != "na":
-                update_data["molecular_weight"] = molw
-            if lip != "na":
-                update_data["lipophilicity"] = lip
-            if hba != "na":
-                update_data["hydrogen_bonding_acceptors"] = hba
-            if hbd != "na":
-                update_data["hydrogen_bonding_donors"] = hbd
+            data = {
+                "user_id": user_id,
+                "molecular_weight": molw,
+                "lipophilicity": lip,
+                "hydrogen_bonding_acceptors": hba,
+                "hydrogen_bonding_donors": hbd,
+            }
 
-            if update_data:
-                response = (
-                    sb_service()
-                    .table("prefs")
-                    .update(update_data)
-                    .eq("user_id", user_id)
-                    .execute()
-                )
+            response = (
+                sb_service()
+                .table("prefs")
+                .upsert(data, on_conflict="user_id")
+                .execute()
+            )
+            print(response)
 
         except Exception as e:
             print(e)
@@ -169,13 +166,13 @@ def profile():
     guard = require_login()
     if guard:
         return guard
-    if request.method=="GET":
+    if request.method == "GET":
         try:
             prefResponse = (
                 sb_service()
                 .table("prefs")
                 .select("*")
-                .eq("user_id",get_user_id())
+                .eq("user_id", get_user_id())
                 .execute()
             )
 
@@ -183,14 +180,12 @@ def profile():
                 sb_service()
                 .table("matches")
                 .select("*")
-                .eq("user_id",get_user_id())
+                .eq("user_id", get_user_id())
                 .execute()
             )
 
             return render_template(
-                "profile.html",
-                prefs=prefResponse.data,
-                matches=matchResponse.data
+                "profile.html", prefs=prefResponse.data, matches=matchResponse.data
             )
         except Exception as e:
             print(e)
