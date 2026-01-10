@@ -1,368 +1,407 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Match - Bonded</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-              rel="stylesheet" />
-        <link rel="stylesheet"
-              href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" />
-        <style>
-     body {
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Match - Bonded</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css"
+    />
+    <style>
+      body {
         overflow-x: hidden;
         min-height: 100vh;
         position: relative;
-        background: 
-            radial-gradient(circle at 10% 70%, rgba(135, 211, 124, 0.35), transparent 30%),
-            radial-gradient(circle at 95% 30%, rgba(135, 211, 124, 0.35), transparent 30%);
-     }
-    
-     /*hexagon icons*/
-     .chemical-decoration {
-       position: absolute;
-       opacity: 0.50;
-       color: white;
-       font-size: 80px;
-       z-index: 0;
-       animation: sparkle 3s ease-in-out infinite;
-     }
-    
-     /* Sparkle animation */
-     @keyframes sparkle {
-       0%, 100% {
-         opacity: 0.3;
-         transform: scale(1);
-       }
-       50% {
-         opacity: 0.8;
-         transform: scale(1.1);
-       }
-     }
-    
-     /* Different animation delays for variety */
-     .chemical-decoration:nth-child(1) { animation-delay: 0s; }
-     .chemical-decoration:nth-child(2) { animation-delay: 0.5s; }
-     .chemical-decoration:nth-child(3) { animation-delay: 1s; }
-     .chemical-decoration:nth-child(4) { animation-delay: 1.5s; }
-     .chemical-decoration:nth-child(5) { animation-delay: 0.25s; }
-     .chemical-decoration:nth-child(6) { animation-delay: 0.75s; }
-     .chemical-decoration:nth-child(7) { animation-delay: 1.25s; }
-     .chemical-decoration:nth-child(8) { animation-delay: 1.75s; }
-    
-     .chemical-decoration.top-left { top: 20px; left: 20px; }
-     .chemical-decoration.top-right { top: 20px; right: 20px; }
-     .chemical-decoration.bottom-left { bottom: 20px; left: 20px; }
-     .chemical-decoration.bottom-right { bottom: 20px; right: 20px; }
-    
-     /* Additional positions */
-     .chemical-decoration.mid-left { top: 50%; left: 10%; transform: translateY(-50%); }
-     .chemical-decoration.mid-right { top: 50%; right: 10%; transform: translateY(-50%); }
-     .chemical-decoration.top-center { top: 15%; left: 50%; transform: translateX(-50%); }
-     .chemical-decoration.bottom-center { bottom: 15%; left: 50%; transform: translateX(-50%); }
-    
-     /* Sizes */
-     .chemical-decoration.small { font-size: 50px; opacity: 0.4; }
-     .chemical-decoration.medium { font-size: 60px; opacity: 0.45; }
-    
-     .main-container {
-       position: relative;
-       z-index: 1;
-       min-height: 100vh;
-       display: flex;
-       align-items: flex-start;
-       justify-content: center;
-       padding-top: 100px;
-       padding-bottom: 20px;
-     }
+        background: radial-gradient(
+            circle at 10% 70%,
+            rgba(135, 211, 124, 0.35),
+            transparent 30%
+          ),
+          radial-gradient(
+            circle at 95% 30%,
+            rgba(135, 211, 124, 0.35),
+            transparent 30%
+          );
+      }
 
-     /* Matching Page Specific Styles */
-     .card-container {
-         max-width: 450px;
-         margin: 20px auto;
-         width: 100%;
-     }
+      /*hexagon icons*/
+      .chemical-decoration {
+        position: absolute;
+        opacity: 0.5;
+        color: white;
+        font-size: 80px;
+        z-index: 0;
+        animation: sparkle 3s ease-in-out infinite;
+      }
 
-     .card {
-         border-radius: 16px;
-         border: none;
-         padding: 1rem;
-         /* Ensure card background is white like profile card */
-         background: white; 
-     }
+      /* Sparkle animation */
+      @keyframes sparkle {
+        0%,
+        100% {
+          opacity: 0.3;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 0.8;
+          transform: scale(1.1);
+        }
+      }
 
-     .compound-card {
-         transition: transform 0.4s ease, opacity 0.4s ease;
-     }
+      /* Different animation delays for variety */
+      .chemical-decoration:nth-child(1) {
+        animation-delay: 0s;
+      }
+      .chemical-decoration:nth-child(2) {
+        animation-delay: 0.5s;
+      }
+      .chemical-decoration:nth-child(3) {
+        animation-delay: 1s;
+      }
+      .chemical-decoration:nth-child(4) {
+        animation-delay: 1.5s;
+      }
+      .chemical-decoration:nth-child(5) {
+        animation-delay: 0.25s;
+      }
+      .chemical-decoration:nth-child(6) {
+        animation-delay: 0.75s;
+      }
+      .chemical-decoration:nth-child(7) {
+        animation-delay: 1.25s;
+      }
+      .chemical-decoration:nth-child(8) {
+        animation-delay: 1.75s;
+      }
 
-     .swipe-left {
-         transform: translateX(-150%) rotate(-4deg);
-         opacity: 0;
-     }
+      .chemical-decoration.top-left {
+        top: 20px;
+        left: 20px;
+      }
+      .chemical-decoration.top-right {
+        top: 20px;
+        right: 20px;
+      }
+      .chemical-decoration.bottom-left {
+        bottom: 20px;
+        left: 20px;
+      }
+      .chemical-decoration.bottom-right {
+        bottom: 20px;
+        right: 20px;
+      }
 
-     .swipe-right {
-         transform: translateX(150%) rotate(4deg);
-         opacity: 0;
-     }
+      /* Additional positions */
+      .chemical-decoration.mid-left {
+        top: 50%;
+        left: 10%;
+        transform: translateY(-50%);
+      }
+      .chemical-decoration.mid-right {
+        top: 50%;
+        right: 10%;
+        transform: translateY(-50%);
+      }
+      .chemical-decoration.top-center {
+        top: 15%;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+      .chemical-decoration.bottom-center {
+        bottom: 15%;
+        left: 50%;
+        transform: translateX(-50%);
+      }
 
-     .list-group {
-         display: flex;
-         flex-direction: row;
-         flex-wrap: wrap;       
-         gap: 6px;          
-         margin: auto 1rem;
-         justify-content: center;   
-     }
+      /* Sizes */
+      .chemical-decoration.small {
+        font-size: 50px;
+        opacity: 0.4;
+      }
+      .chemical-decoration.medium {
+        font-size: 60px;
+        opacity: 0.45;
+      }
 
-     .list-group-item {
-         background: rgba(245, 255, 245, 0.7);
-         color: #444;
-         font-size: 0.9rem;
-         border-radius: 50px;
-         border: none;         
-     }
+      .main-container {
+        position: relative;
+        z-index: 1;
+        min-height: 100vh;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding-top: 100px;
+        padding-bottom: 20px;
+      }
 
-     .match-btn {
-         width: 58px;
-         height: 58px;
-         border-radius: 50%;
-         font-size: 1.8rem;
-         transition: transform 0.2s ease, background-color 0.2s ease;
-         display: flex;
-         align-items: center;
-         justify-content: center;
-     }
+      /* Matching Page Specific Styles */
+      .card-container {
+        max-width: 450px;
+        margin: 20px auto;
+        width: 100%;
+      }
 
-     .compound-text {
-         font-family: monospace;
-         font-size: 0.85rem;
-         color: #333;
-     }
+      .card {
+        border-radius: 16px;
+        border: none;
+        padding: 1rem;
+        /* Ensure card background is white like profile card */
+        background: white;
+      }
 
-     .match-btn:hover {
-         transform: scale(1.1);
-     }
+      .compound-card {
+        transition: transform 0.4s ease, opacity 0.4s ease;
+      }
 
-     .btn-outline-success {
-         border-color: #81c784;
-         border-width: 2px;
-         color: #81c784;
-     }
+      .swipe-left {
+        transform: translateX(-150%) rotate(-4deg);
+        opacity: 0;
+      }
 
-     .btn-outline-success:hover {
-         background-color: #81c784;
-         color: white;
-     }
+      .swipe-right {
+        transform: translateX(150%) rotate(4deg);
+        opacity: 0;
+      }
 
-     .btn-outline-danger {
-         border-color: #e57373;
-         border-width: 2px;
-         color: #e57373;
-     }
+      .list-group {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin: auto 1rem;
+        justify-content: center;
+      }
 
-     .btn-outline-danger:hover {
-         background-color: #e57373;
-         color: white;
-     }
-        </style>
-    </head>
-    <body>
-        {% include 'partials/navbar.html' %}
-        <!-- Background Decorations -->
-        <div class="chemical-decoration top-left">
+      .list-group-item {
+        background: rgba(245, 255, 245, 0.7);
+        color: #444;
+        font-size: 0.9rem;
+        border-radius: 50px;
+        border: none;
+      }
+
+      .match-btn {
+        width: 58px;
+        height: 58px;
+        border-radius: 50%;
+        font-size: 1.8rem;
+        transition: transform 0.2s ease, background-color 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .compound-text {
+        font-family: monospace;
+        font-size: 0.85rem;
+        color: #333;
+      }
+
+      .match-btn:hover {
+        transform: scale(1.1);
+      }
+
+      .btn-outline-success {
+        border-color: #81c784;
+        border-width: 2px;
+        color: #81c784;
+      }
+
+      .btn-outline-success:hover {
+        background-color: #81c784;
+        color: white;
+      }
+
+      .btn-outline-danger {
+        border-color: #e57373;
+        border-width: 2px;
+        color: #e57373;
+      }
+
+      .btn-outline-danger:hover {
+        background-color: #e57373;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    {% include 'partials/navbar.html' %}
+    <!-- Background Decorations -->
+    <div class="chemical-decoration top-left">
+      <i class="bi bi-hexagon"></i>
+    </div>
+    <div class="chemical-decoration top-right">
+      <i class="bi bi-hexagon"></i>
+    </div>
+    <div class="chemical-decoration bottom-left">
+      <i class="bi bi-hexagon"></i>
+    </div>
+    <div class="chemical-decoration bottom-right">
+      <i class="bi bi-hexagon"></i>
+    </div>
+    <div class="chemical-decoration mid-left medium">
+      <i class="bi bi-circle"></i>
+    </div>
+    <div class="chemical-decoration mid-right medium">
+      <i class="bi bi-triangle"></i>
+    </div>
+    <div class="chemical-decoration top-center small">
+      <i class="bi bi-hexagon"></i>
+    </div>
+    <div class="chemical-decoration bottom-center small">
+      <i class="bi bi-circle"></i>
+    </div>
+
+    <div class="main-container">
+      <div class="container">
+        <div class="matching-container">
+          <h2
+            class="text-center mb-4 text-black"
+            style="text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)"
+          >
+            Bond With Your Compound
             <i class="bi bi-hexagon"></i>
-        </div>
-        <div class="chemical-decoration top-right">
-            <i class="bi bi-hexagon"></i>
-        </div>
-        <div class="chemical-decoration bottom-left">
-            <i class="bi bi-hexagon"></i>
-        </div>
-        <div class="chemical-decoration bottom-right">
-            <i class="bi bi-hexagon"></i>
-        </div>
-        <div class="chemical-decoration mid-left medium">
-            <i class="bi bi-circle"></i>
-        </div>
-        <div class="chemical-decoration mid-right medium">
-            <i class="bi bi-triangle"></i>
-        </div>
-        <div class="chemical-decoration top-center small">
-            <i class="bi bi-hexagon"></i>
-        </div>
-        <div class="chemical-decoration bottom-center small">
-            <i class="bi bi-circle"></i>
-        </div>
+          </h2>
+          <div class="card-container text-center">
+            <div id="compoundCard" class="card compound-card shadow">
+              <img
+                id="compoundImage"
+                src="{{ url_for('get_compound_image', smiles=smiles) }}"
+                class="card-img-top"
+                alt="Compound structure image"
+                style="
+                  width: 100%;
+                  height: auto;
+                  max-height: 400px;
+                  object-fit: contain;
+                "
+              />
 
-
-
-        <div class="main-container">
-            <div class="container">
-
-                <div class="matching-container">
-                    <h2 class="text-center mb-4 text-black"
-                        style="text-shadow: 0 2px 4px rgba(0,0,0,0.1)">
-                        Bond With Your Compound
-                        <i class="bi bi-hexagon"></i>
-                    </h2>
-                    <div class="card-container text-center">
-                        <div id="compoundCard" class="card compound-card shadow">
-                            {% if done %}
-                                <h3 class='p-4 text-center'>No more compounds!</h3>
-                            {% else %}
-                                <img id="compoundImage"
-                                     src="{{ url_for('get_compound_image', smiles=smiles) }}"
-                                     class="card-img-top"
-                                     alt="Compound structure image"
-                                     style="width: 100%;
-                                            height: auto;
-                                            max-height: 400px;
-                                            object-fit: contain" />
-
-                                <div class="card-body">
-                                    <div class="compound-text mb-3">
-                                        <strong id="compoundName" class="fs-5">{{ name }}</strong>
-                                        <br>
-                                        <span id="smiles" class="text-muted">{{ smiles }}</span>
-                                    </div>
-
-                                    <ul class="list-group mb-4">
-                                        {% if res and res.molecular_weight is not none %}
-                                            <li class="list-group-item">
-                                                <strong>Molecular Weight:</strong>
-                                                {{ res.molecular_weight }}
-                                            </li>
-                                        {% endif %}
-                                        {% if res and res.lipophilicity is not none %}
-                                            <li class="list-group-item">
-                                                <strong>Lipophilicity:</strong>
-                                                {{ res.lipophilicity }}
-                                            </li>
-                                        {% endif %}
-                                        {% if res and res.hydrogen_bonding_acceptors is not none %}
-                                            <li class="list-group-item">
-                                                <strong>HBA:</strong>
-                                                {{ res.hydrogen_bonding_acceptors }}
-                                            </li>
-                                        {% endif %}
-                                        {% if res and res.hydrogen_bonding_donors is not none %}
-                                            <li class="list-group-item">
-                                                <strong>HBA:</strong>
-                                                {{ res.hydrogen_bonding_donors }}
-                                            </li>
-                                        {% endif %}
-                                    </ul>
-
-                                    <div class="d-flex justify-content-around mt-4">
-                                        <button id="dislikeBtn"
-                                                class="btn btn-outline-danger match-btn"
-                                                data-bs-toggle="tooltip"
-                                                title="Skip"
-                                                type="button">
-                                            <i class="bi bi-x-lg"></i>
-                                        </button>
-
-                                        <button id="likeBtn"
-                                                class="btn btn-outline-success match-btn"
-                                                data-bs-toggle="tooltip"
-                                                title="Like"
-                                                type="button">
-                                            <i class="bi bi-suit-heart"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            {% endif %}
-
-                        </div>
-                    </div>
+              <div class="card-body">
+                <div class="compound-text mb-3">
+                  <strong id="compoundName" class="fs-5">{{ name }}</strong>
+                  <br />
+                  <span id="smiles" class="text-muted">{{ smiles }}</span>
                 </div>
 
+                <ul class="list-group mb-4">
+                  {% if res.molecular_weight is not none %}
+                  <li class="list-group-item">
+                    <strong>Molecular Weight:</strong>
+                    {{ res.molecular_weight }}
+                  </li>
+                  {% endif %} {% if res.lipophilicity is not none %}
+                  <li class="list-group-item">
+                    <strong>Lipophilicity:</strong>
+                    {{ res.lipophilicity }}
+                  </li>
+                  {% endif %} {% if res.hydrogen_bonding_acceptors is not none
+                  %}
+                  <li class="list-group-item">
+                    <strong>HBA:</strong>
+                    {{ res.hydrogen_bonding_acceptors }}
+                  </li>
+                  {% endif %} {% if res.hydrogen_bonding_donors is not none %}
+                  <li class="list-group-item">
+                    <strong>HBA:</strong>
+                    {{ res.hydrogen_bonding_donors }}
+                  </li>
+                  {% endif %}
+                </ul>
+
+                <div class="d-flex justify-content-around mt-4">
+                  <button
+                    id="dislikeBtn"
+                    class="btn btn-outline-danger match-btn"
+                    data-bs-toggle="tooltip"
+                    title="Skip"
+                    type="button"
+                  >
+                    <i class="bi bi-x-lg"></i>
+                  </button>
+
+                  <button
+                    id="likeBtn"
+                    class="btn btn-outline-success match-btn"
+                    data-bs-toggle="tooltip"
+                    title="Like"
+                    type="button"
+                  >
+                    <i class="bi bi-suit-heart"></i>
+                  </button>
+                </div>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
+    </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-        <script>
-        const card = document.getElementById("compoundCard");
-        const likeBtn = document.getElementById("likeBtn");
-        const dislikeBtn = document.getElementById("dislikeBtn");
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      const card = document.getElementById("compoundCard");
+      const likeBtn = document.getElementById("likeBtn");
+      const dislikeBtn = document.getElementById("dislikeBtn");
 
-  const nameEl = document.getElementById("compoundName");
-  const smilesEl = document.getElementById("smiles");
-  const imgEl = document.getElementById("compoundImage");
+      const name = document.getElementById("compoundName");
+      const smiles = document.getElementById("smiles");
+      const img = document.getElementById("compoundImage");
 
-  // holds the currently displayed compound 
-  let current = null;
+      async function swipe(direction) {
+        likeBtn.disabled = true;
+        dislikeBtn.disabled = true;
 
-  function setDoneState() {
-    card.innerHTML = "<h3 class='p-4 text-center'>No more compounds!</h3>";
-  }
+        card.classList.add(direction === "like" ? "swipe-right" : "swipe-left");
 
-  function renderCompound(m) {
-    current = m;
+        const res = await fetch("/api/match", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: direction }),
+        });
 
-    nameEl.textContent = m.name;
-    smilesEl.textContent = m.smiles;
+        const data = await res.json();
 
-    imgEl.src = `/compound-image?smiles=${encodeURIComponent(m.smiles)}`;
-  }
+        setTimeout(() => {
+          card.classList.remove("swipe-left", "swipe-right");
 
-  async function loadNext() {
-    likeBtn.disabled = true;
-    dislikeBtn.disabled = true;
+          if (data.done) {
+            card.innerHTML = "<h3 class='p-4'>No more compounds!</h3>";
+            return;
+          }
 
-    const res = await fetch("/api/get-next-match");
-    const data = await res.json();
+          name.textContent = data.name;
+          smiles.textContent = data.smiles;
+          img.src = `/compound-image?smiles=${encodeURIComponent(data.smiles)}`;
 
-    if (data.done) {
-      setDoneState();
-      return;
-    }
+          likeBtn.disabled = false;
+          dislikeBtn.disabled = false;
+        }, 400);
+      }
 
-    renderCompound(data);
+      likeBtn.addEventListener("click", () => swipe("like"));
+      dislikeBtn.addEventListener("click", () => swipe("skip"));
 
-    likeBtn.disabled = false;
-    dislikeBtn.disabled = false;
-  }
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "ArrowLeft") {
+          swipe("skip");
+        } else if (event.key === "ArrowRight") {
+          swipe("like");
+        }
+      });
 
-  async function swipe(direction) {
-    if (!current) return;
-
-    likeBtn.disabled = true;
-    dislikeBtn.disabled = true;
-
-    card.classList.add(direction === "like" ? "swipe-right" : "swipe-left");
-
-    // sends current card info to api
-    await fetch("/api/match", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        action: direction === "like" ? "like" : "dislike",
-        smiles: current.smiles,
-        name: current.name
-      })
-    });
-
-    setTimeout(async () => {
-      card.classList.remove("swipe-left", "swipe-right");
-      await loadNext();
-    }, 400);
-  }
-
-  likeBtn.addEventListener("click", () => swipe("like"));
-  dislikeBtn.addEventListener("click", () => swipe("dislike"));
-
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "ArrowLeft") swipe("dislike");
-    if (event.key === "ArrowRight") swipe("like");
-  });
-
-  // tooltips
-  const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-  [...tooltipTriggerList].forEach((el) => new bootstrap.Tooltip(el));
-
-  // load first card on page load
-  loadNext();
-</script>
- </body>
+      // Initialize tooltips
+      const tooltipTriggerList = document.querySelectorAll(
+        '[data-bs-toggle="tooltip"]'
+      );
+      const tooltipList = [...tooltipTriggerList].forEach(
+        (tooltipTriggerEl) => {
+          new bootstrap.Tooltip(tooltipTriggerEl);
+        }
+      );
+    </script>
+  </body>
 </html>
